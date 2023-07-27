@@ -14,8 +14,8 @@ def read_trial_balance(year: int, month_number: int):
     wb = openpyxl.load_workbook(path)
     sheets = wb.sheetnames
     number_of_months = len(sheets)
-    if number_of_months < 12:
-        print(f'Too few months: {year}')
+    # if number_of_months < 12:
+    #     print(f'Too few months: {year}')
     month = MONTHS[month_number]
     sheet = sheets[month_number]
     # print(f'month_num = {month_num} {year} {month}')
@@ -79,19 +79,26 @@ def read_all_trial_balances() -> pd.DataFrame:
     df = df.replace(float('nan'), 0)
     cols = df.columns.tolist()
     cols.sort()
-    df = df[cols]
-    df['total'] = df[df.columns].sum()
-    # print(df)
-    # df.to_csv("tb.csv")
     return df, accounts
 
 
 def main():
-    read_all_trial_balances()
+    tb, accounts = read_all_trial_balances()
+    # accounts.write_accounts()
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    pass
 
 # sheet = 'MARCH.2017 Trial Balance'
 # code  = 'MARCH.2017 Trial Balance'
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 2 * np.pi, 200)
+y = np.sin(x)
+
+fig, ax = plt.subplots()
+ax.plot(x, y)
+plt.show()

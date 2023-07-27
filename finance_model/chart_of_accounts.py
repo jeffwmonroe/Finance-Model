@@ -1,8 +1,12 @@
 import pandas as pd
 from finance_model.ledger import Ledger
 
+
 class ChartOfAccounts:
     def __init__(self):
+        df = pd.read_excel('documents\\chart_of_accounts_mapping.xlsx')
+        df['bs_is'] = df['bs_is'].astype('category')
+        self.account_mapping = df
         self.accounts = {}
 
     def add_accounts(self, tb: pd.DataFrame):
@@ -20,7 +24,11 @@ class ChartOfAccounts:
                 dc = 'credit'
             else:
                 dc = 'debit'
-            bs_is = "unknown"
+            map_row = self.account_mapping[id >= self.account_mapping['low']]
+            map_row = map_row[id <= map_row['high']]
+            if len(map_row) != 1:
+                print(f'ERROR: more than one row match to id = {id}')
+            bs_is = map_row.iloc[0, 2]
             if debit < 0:
                 Exception(f"ERROR: {id} debit is a negative number")
             if credit < 0:
@@ -41,3 +49,16 @@ class ChartOfAccounts:
                     raise Exception(f'ERROR id={id} description mismatch')
 
             # print(f'row[{id}]= {row}')
+
+    def sorted_accounts(self):
+        decorated = [(ledger.id, ledger) for ledger in list(self.accounts.values())]
+        decorated.sort()
+        undecorated = [leger for acc_id, leger in decorated]
+        return undecorated
+
+    def write_accounts(self):
+        sorted_accounts = self.sorted_accounts()
+        sorted_accounts = [ledger.to_dict() for ledger in sorted_accounts]
+        df = pd.DataFrame(sorted_accounts)
+
+        df.to_csv('chart of accounts.csv')
