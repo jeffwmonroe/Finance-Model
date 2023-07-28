@@ -77,8 +77,7 @@ def read_all_trial_balances() -> pd.DataFrame:
     # print(trial_balances)
     df = pd.DataFrame(trial_balances).T
     df = df.replace(float('nan'), 0)
-    cols = df.columns.tolist()
-    cols.sort()
+    df = df.sort_index(axis = 1)
     return df, accounts
 
 
@@ -88,17 +87,5 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
-    pass
+    main()
 
-# sheet = 'MARCH.2017 Trial Balance'
-# code  = 'MARCH.2017 Trial Balance'
-import matplotlib.pyplot as plt
-import numpy as np
-
-x = np.linspace(0, 2 * np.pi, 200)
-y = np.sin(x)
-
-fig, ax = plt.subplots()
-ax.plot(x, y)
-plt.show()
