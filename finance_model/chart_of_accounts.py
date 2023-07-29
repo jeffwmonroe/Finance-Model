@@ -2,6 +2,10 @@ import pandas as pd
 from finance_model.ledger import Ledger
 from finance_model.timer import timer
 from finance_model.read_trial_balances import read_trial_balance, clean_trial_balance, collapse_trail_balance
+from itertools import compress
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import numpy as np
 
 
 def check_debit_credit(debit, credit, account_no):
@@ -63,11 +67,11 @@ class ChartOfAccounts:
                     raise Exception(f'ERROR account_no={account_no} description mismatch')
 
     @timer
-    def read_all_trial_balances(self):
+    def read_all_trial_balances(self, start_year, end_year):
         print('Finance model:')
         trial_balances = {}
         # ToDO Generalize the years. It should be a parameter
-        years = [year for year in range(2017, 2024)]
+        years = [year for year in range(start_year, end_year + 1)]
         for year in years:
             print(f'year = {year}')
             filename = f"HazTrain TB.{year} by month GENAESIS Confidential.xlsx"
@@ -105,3 +109,38 @@ class ChartOfAccounts:
         df = pd.DataFrame(sorted_accounts)
 
         df.to_csv('chart of accounts.csv')
+
+    def sub_account_cols(self, sub_account):
+
+        map_row = self.account_mapping.iloc[sub_account]
+        columns = self.trial_balances.columns.to_list()
+        low = columns >= map_row['low']
+        high = columns <= map_row['high']
+        match = low & high
+        match_cols = list(compress(columns, match))
+
+        return match_cols
+
+    def plot_accounts(self, sub_account):
+        match_cols = self.sub_account_cols(sub_account)
+        map_row = self.account_mapping.iloc[sub_account]
+        title = f'{map_row.category} - {map_row.sub_category} - {map_row.sub_account}'
+
+        fig, ax = plt.subplots(figsize=(12, 4), layout='constrained')
+
+        date_axis = [np.datetime64(dt) for dt in self.trial_balances.index]
+        for i in match_cols:
+            ax.plot(date_axis, self.trial_balances[i],
+                    label=self.accounts[i].description)
+        ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=(1, 7)))
+        ax.xaxis.set_minor_locator(mdates.MonthLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%b'))
+        # Rotates and right-aligns the x labels so they don't crowd each other.
+        for label in ax.get_xticklabels(which='major'):
+            label.set(rotation=30, horizontalalignment='right')
+        ax.set_xlabel("time")
+        ax.set_ylabel("height")
+        ax.set_title(title)
+        ax.legend()
+
+        plt.show()
