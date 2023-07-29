@@ -1,1 +1,3 @@
 from finance_model.chart_of_accounts import ChartOfAccounts
+
+from finance_model.chart_of_accounts import ChartOfAccounts

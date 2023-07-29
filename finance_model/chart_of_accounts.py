@@ -4,8 +4,11 @@ from finance_model.timer import timer
 from finance_model.read_trial_balances import read_trial_balance, clean_trial_balance, collapse_trail_balance
 from itertools import compress
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 import matplotlib.dates as mdates
 import numpy as np
+import base64
+from io import BytesIO
 
 
 def check_debit_credit(debit, credit, account_no):
@@ -121,12 +124,17 @@ class ChartOfAccounts:
 
         return match_cols
 
-    def plot_accounts(self, sub_account):
+    def plot_accounts(self, sub_account, binary=False):
         match_cols = self.sub_account_cols(sub_account)
         map_row = self.account_mapping.iloc[sub_account]
         title = f'{map_row.category} - {map_row.sub_category} - {map_row.sub_account}'
 
-        fig, ax = plt.subplots(figsize=(12, 4), layout='constrained')
+        figsize = (10,10)
+        if binary:
+            fig = Figure(figsize=figsize)
+            ax = fig.subplots()
+        else:
+            fig, ax = plt.subplots(figsize=figsize, layout='constrained')
 
         date_axis = [np.datetime64(dt) for dt in self.trial_balances.index]
         for i in match_cols:
@@ -143,4 +151,12 @@ class ChartOfAccounts:
         ax.set_title(title)
         ax.legend()
 
-        plt.show()
+        if binary:
+            # Save it to a temporary buffer.
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            # Embed the result in the html output.
+            data = base64.b64encode(buf.getbuffer()).decode("ascii")
+            return data
+        else:
+            plt.show()

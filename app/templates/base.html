@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+<head>
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Ontology Workbench</title>
+    {% endif %}
+  <link rel="stylesheet" href="{{url_for('static', filename='css/mystyle.css')}}">
+
+</head>
+<body>
+<div>
+    Finance:
+    <a href="/">Home</a>
+
+</div>
+<hr>
+{% block content %}
+{% endblock %}
+</body>
+</html>
