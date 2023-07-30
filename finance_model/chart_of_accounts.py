@@ -9,6 +9,19 @@ import matplotlib.dates as mdates
 import numpy as np
 import base64
 from io import BytesIO
+import pickle
+
+
+@timer
+def unpickle_accounts():
+    with open('charts.pickle', 'rb') as handle:
+        account = pickle.load(handle)
+    return account
+
+
+def pickle_accounts(account):
+    with open('charts.pickle', 'wb') as handle:
+        pickle.dump(account, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 def check_debit_credit(debit, credit, account_no):
@@ -28,11 +41,11 @@ def check_debit_credit(debit, credit, account_no):
 
 class ChartOfAccounts:
     def __init__(self):
-        df = pd.read_excel('documents\\chart_of_accounts_mapping.xlsx')
-        df['bs_is'] = df['bs_is'].astype('category')
-        self.account_mapping = df
+        self.account_mapping = None
+        self.read_account_mapping()
         self.accounts = {}
         self.trial_balances = None
+        self.detailed_account_mapping = None
 
     def get_account_mapping(self, account_no):
         map_row = self.account_mapping[account_no >= self.account_mapping['low']]
@@ -69,6 +82,33 @@ class ChartOfAccounts:
                 if account.description != description:
                     raise Exception(f'ERROR account_no={account_no} description mismatch')
 
+    def build_detailed_account_mapping(self):
+        cols = [col for col in self.trial_balances.columns]
+        blanks = [None] * len(cols)
+        df_data = {'account_no': cols,
+                   'category': blanks,
+                   'sub_category': blanks,
+                   'sub_account': blanks,
+                   'account': blanks}
+        df = pd.DataFrame(df_data)
+        for i in range(len(cols)):
+            account_no = cols[i]
+            row = self.get_account_mapping(account_no)
+            df.iloc[i, 1:4] = row.iloc[0, 3:6]
+            df.iloc[i, 4] = self.accounts[account_no].description
+        self.detailed_account_mapping = df
+
+    def clean_account_mapping(self):
+        rows = self.account_mapping.loc[:, 'sub_category'].isnull()
+        self.account_mapping.loc[rows, 'sub_category'] = self.account_mapping.loc[rows, 'category']
+        rows = self.account_mapping.loc[:, 'sub_account'].isnull()
+        self.account_mapping.loc[rows, 'sub_account'] = self.account_mapping.loc[rows, 'sub_category']
+
+    def read_account_mapping(self):
+        df = pd.read_excel('documents\\chart_of_accounts_mapping.xlsx')
+        df['bs_is'] = df['bs_is'].astype('category')
+        self.account_mapping = df
+
     @timer
     def read_all_trial_balances(self, start_year, end_year):
         print('Finance model:')
@@ -100,6 +140,9 @@ class ChartOfAccounts:
         df = df.sort_index(axis=1)
         self.trial_balances = df
 
+        self.clean_account_mapping()
+        self.build_detailed_account_mapping()
+
     def sorted_accounts(self):
         decorated = [(ledger.account_no, ledger) for ledger in list(self.accounts.values())]
         decorated.sort()
@@ -114,7 +157,6 @@ class ChartOfAccounts:
         df.to_csv('chart of accounts.csv')
 
     def sub_account_cols(self, sub_account):
-
         map_row = self.account_mapping.iloc[sub_account]
         columns = self.trial_balances.columns.to_list()
         low = columns >= map_row['low']
@@ -129,7 +171,7 @@ class ChartOfAccounts:
         map_row = self.account_mapping.iloc[sub_account]
         title = f'{map_row.category} - {map_row.sub_category} - {map_row.sub_account}'
 
-        figsize = (10,10)
+        figsize = (10, 10)
         if binary:
             fig = Figure(figsize=figsize)
             ax = fig.subplots()
