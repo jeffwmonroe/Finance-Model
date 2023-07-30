@@ -86,6 +86,7 @@ class ChartOfAccounts:
         cols = [col for col in self.trial_balances.columns]
         blanks = [None] * len(cols)
         df_data = {'account_no': cols,
+                   'bs_is': blanks,
                    'category': blanks,
                    'sub_category': blanks,
                    'sub_account': blanks,
@@ -94,8 +95,9 @@ class ChartOfAccounts:
         for i in range(len(cols)):
             account_no = cols[i]
             row = self.get_account_mapping(account_no)
-            df.iloc[i, 1:4] = row.iloc[0, 3:6]
-            df.iloc[i, 4] = self.accounts[account_no].description
+            df.iloc[i, 2:5] = row.iloc[0, 3:6]
+            df.iloc[i, 5] = self.accounts[account_no].description
+            df.iloc[i, 1] = self.accounts[account_no].bs_is
         self.detailed_account_mapping = df
 
     def clean_account_mapping(self):
@@ -166,11 +168,8 @@ class ChartOfAccounts:
 
         return match_cols
 
-    def plot_accounts(self, sub_account, binary=False):
-        match_cols = self.sub_account_cols(sub_account)
-        map_row = self.account_mapping.iloc[sub_account]
-        title = f'{map_row.category} - {map_row.sub_category} - {map_row.sub_account}'
 
+    def finance_plot(self, data, title, binary=False):
         figsize = (10, 10)
         if binary:
             fig = Figure(figsize=figsize)
@@ -178,10 +177,10 @@ class ChartOfAccounts:
         else:
             fig, ax = plt.subplots(figsize=figsize, layout='constrained')
 
-        date_axis = [np.datetime64(dt) for dt in self.trial_balances.index]
-        for i in match_cols:
-            ax.plot(date_axis, self.trial_balances[i],
-                    label=self.accounts[i].description)
+        date_axis = [np.datetime64(dt) for dt in data.index]
+        for i in data.columns:
+            ax.plot(date_axis, data[i],
+                    label=i)
         ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=(1, 7)))
         ax.xaxis.set_minor_locator(mdates.MonthLocator())
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%b'))
@@ -202,3 +201,15 @@ class ChartOfAccounts:
             return data
         else:
             plt.show()
+
+    def get_data_to_plot(self, level, filter_value, group_by, binary=False):
+        tb = self.trial_balances.T
+        tb['account_no'] = tb.index
+        tb = tb.merge(self.detailed_account_mapping, how='left', on='account_no')
+
+        rows = tb[level] == filter_value
+        filtered_tb = tb[rows]
+        group = filtered_tb.groupby(group_by)
+        data = group.sum().iloc[:, :-5].T
+        sub_data_names = data.columns.to_list()
+        return self.finance_plot(data, f'{level} : {filter_value}', True), sub_data_names

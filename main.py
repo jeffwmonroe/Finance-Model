@@ -3,7 +3,7 @@ import pickle
 
 
 def main():
-    if False:
+    if True:
         account = ChartOfAccounts()
         account.read_all_trial_balances(2017, 2023)
         print(account.trial_balances)
@@ -12,7 +12,7 @@ def main():
         # pickle.dump(account, "charts")
     else:
         account = unpickle_accounts()
-    account.plot_accounts(17)
+    # account.plot_accounts(17)
 
 
 if __name__ == '__main__':
