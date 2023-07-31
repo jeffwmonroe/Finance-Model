@@ -14,7 +14,7 @@ def home_page():
     print(f'home_page')
     form = AccountControl()
     chart_number = 0
-    plot_level = 1
+    plot_level = 0
 
     if form.validate_on_submit():
         chart_number = form.chart_number.data
@@ -49,6 +49,6 @@ def home_page():
         form.chart_number.raw_data = [f'{chart_number}']
     item = levels[chart_number]
 
-    data, sub_data_names = accounts.get_data_to_plot(level, item, group_by, True)
+    data, sub_data_names = accounts.plot_data(level, item, group_by, True)
     # return f"<img src='data:image/png;base64,{data}'/>"
     return render_template("home.html", chart=data, form=form)

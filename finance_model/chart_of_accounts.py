@@ -3,12 +3,7 @@ from finance_model.ledger import Ledger
 from finance_model.timer import timer
 from finance_model.read_trial_balances import read_trial_balance, clean_trial_balance, collapse_trail_balance
 from itertools import compress
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-import matplotlib.dates as mdates
-import numpy as np
-import base64
-from io import BytesIO
+from finance_model.plot_financials import finance_plot
 import pickle
 
 
@@ -168,48 +163,33 @@ class ChartOfAccounts:
 
         return match_cols
 
-
-    def finance_plot(self, data, title, binary=False):
-        figsize = (10, 10)
-        if binary:
-            fig = Figure(figsize=figsize)
-            ax = fig.subplots()
-        else:
-            fig, ax = plt.subplots(figsize=figsize, layout='constrained')
-
-        date_axis = [np.datetime64(dt) for dt in data.index]
-        for i in data.columns:
-            ax.plot(date_axis, data[i],
-                    label=i)
-        ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=(1, 7)))
-        ax.xaxis.set_minor_locator(mdates.MonthLocator())
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%b'))
-        # Rotates and right-aligns the x labels so they don't crowd each other.
-        for label in ax.get_xticklabels(which='major'):
-            label.set(rotation=30, horizontalalignment='right')
-        ax.set_xlabel("time")
-        ax.set_ylabel("height")
-        ax.set_title(title)
-        ax.legend()
-
-        if binary:
-            # Save it to a temporary buffer.
-            buf = BytesIO()
-            fig.savefig(buf, format="png")
-            # Embed the result in the html output.
-            data = base64.b64encode(buf.getbuffer()).decode("ascii")
-            return data
-        else:
-            plt.show()
-
     def get_data_to_plot(self, level, filter_value, group_by, binary=False):
+        print(f'get_data_to_plot {level}')
         tb = self.trial_balances.T
         tb['account_no'] = tb.index
         tb = tb.merge(self.detailed_account_mapping, how='left', on='account_no')
 
         rows = tb[level] == filter_value
         filtered_tb = tb[rows]
+
+        label = "error bad label"
+
+        if len(rows) > 0:
+            val = filtered_tb.iloc[0, -5:]
+            pos = val.index.to_list().index(level)
+            items = [val[item] for item in val.index]
+            items = items[:pos]
+            items.append(filter_value)
+            items = pd.Series(items).drop_duplicates().to_list()
+            label = " : ".join(items)
+
         group = filtered_tb.groupby(group_by)
         data = group.sum().iloc[:, :-5].T
         sub_data_names = data.columns.to_list()
-        return self.finance_plot(data, f'{level} : {filter_value}', True), sub_data_names
+        # data = data.iloc[:12]
+
+        return data, label, sub_data_names
+
+    def plot_data(self, level, filter_value, group_by, binary=False):
+        data, label, sub_data_names = self.get_data_to_plot(level, filter_value, group_by, binary)
+        return finance_plot(data, label, binary), sub_data_names
