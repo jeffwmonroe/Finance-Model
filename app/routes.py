@@ -49,6 +49,7 @@ def home_page():
         form.chart_number.raw_data = [f'{chart_number}']
     item = levels[chart_number]
 
-    data, sub_data_names = accounts.plot_data(level, item, group_by, True)
+    data, sub_data_names = accounts.plot_data(level, item, group_by, binary=True, yearly=True)
+    print(f'sub_data_names = {sub_data_names}')
     # return f"<img src='data:image/png;base64,{data}'/>"
     return render_template("home.html", chart=data, form=form)

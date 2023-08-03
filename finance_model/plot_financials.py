@@ -49,7 +49,7 @@ def plot_bars(ax, date_axis, data):
     ax.legend(hd, lab)
 
 
-def finance_plot(data, title, binary=False):
+def finance_plot(data, title, binary=False, yearly=True):
     figsize = (10, 10)
     if binary:
         fig = Figure(figsize=figsize)
@@ -57,9 +57,12 @@ def finance_plot(data, title, binary=False):
     else:
         fig, ax = plt.subplots(figsize=figsize, layout='constrained')
 
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(6))
-    # date_axis = [np.datetime64(dt) for dt in data.index]
-    date_axis = [pd.to_datetime(dt).strftime('%m-%y') for dt in data.index]
+    if yearly:
+        ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+        date_axis = [pd.to_datetime(dt).strftime('%Y') for dt in data.index]
+    else:
+        ax.xaxis.set_major_locator(ticker.MultipleLocator(6))
+        date_axis = [pd.to_datetime(dt).strftime('%m-%y') for dt in data.index]
     plot_bars(ax, date_axis, data)
     # plot_lines(ax, date_axis, data)
 

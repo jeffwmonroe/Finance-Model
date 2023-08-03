@@ -163,9 +163,17 @@ class ChartOfAccounts:
 
         return match_cols
 
-    def get_data_to_plot(self, level, filter_value, group_by, binary=False):
+    @timer
+    def get_data_to_plot(self, level, filter_value, group_by, binary=False, yearly=False):
         print(f'get_data_to_plot {level}')
-        tb = self.trial_balances.T
+
+        tb = self.trial_balances
+        if yearly:
+            tb['year'] = [date[:4] for date in tb.index]
+            grp = tb.groupby('year')
+            tb = grp.tail(1).iloc[:, :-1]
+        tb = tb.T
+
         tb['account_no'] = tb.index
         tb = tb.merge(self.detailed_account_mapping, how='left', on='account_no')
 
@@ -190,6 +198,7 @@ class ChartOfAccounts:
 
         return data, label, sub_data_names
 
-    def plot_data(self, level, filter_value, group_by, binary=False):
-        data, label, sub_data_names = self.get_data_to_plot(level, filter_value, group_by, binary)
-        return finance_plot(data, label, binary), sub_data_names
+    @timer
+    def plot_data(self, level, filter_value, group_by, binary=False, yearly=False):
+        data, label, sub_data_names = self.get_data_to_plot(level, filter_value, group_by, binary=binary, yearly=yearly)
+        return finance_plot(data, label, binary=binary, yearly=yearly), sub_data_names
