@@ -59,7 +59,7 @@ def finance_plot(data, title, binary=False, yearly=True):
 
     if yearly:
         ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
-        date_axis = [pd.to_datetime(dt).strftime('%Y') for dt in data.index]
+        date_axis = [pd.to_datetime(dt).strftime('%b-%Y') for dt in data.index]
     else:
         ax.xaxis.set_major_locator(ticker.MultipleLocator(6))
         date_axis = [pd.to_datetime(dt).strftime('%m-%y') for dt in data.index]

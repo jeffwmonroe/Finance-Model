@@ -164,7 +164,7 @@ class ChartOfAccounts:
         return match_cols
 
     @timer
-    def get_data_to_plot(self, level, filter_value, group_by, binary=False, yearly=False):
+    def get_data_to_plot(self, level, filter_value, group_by, yearly=False):
         print(f'get_data_to_plot {level}')
 
         tb = self.trial_balances
@@ -200,5 +200,5 @@ class ChartOfAccounts:
 
     @timer
     def plot_data(self, level, filter_value, group_by, binary=False, yearly=False):
-        data, label, sub_data_names = self.get_data_to_plot(level, filter_value, group_by, binary=binary, yearly=yearly)
+        data, label, sub_data_names = self.get_data_to_plot(level, filter_value, group_by, yearly=yearly)
         return finance_plot(data, label, binary=binary, yearly=yearly), sub_data_names
