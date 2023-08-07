@@ -167,10 +167,11 @@ class ChartOfAccounts:
     def get_data_to_plot(self, level, filter_value, group_by, yearly=False):
         print(f'get_data_to_plot {level}')
 
-        tb = self.trial_balances
+        tb = self.trial_balances.copy()
         if yearly:
             tb['year'] = [date[:4] for date in tb.index]
             grp = tb.groupby('year')
+            # Choose the last of each grouping. This works because the data is cumulative
             tb = grp.tail(1).iloc[:, :-1]
         tb = tb.T
 
