@@ -2,6 +2,8 @@ import pandas as pd
 import calendar
 from datetime import datetime
 
+import pylab as p
+
 MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 
 
@@ -11,7 +13,8 @@ def clean_trial_balance(df: pd.DataFrame):
     df = df.set_axis(["id", "description", "debit", "credit"], axis=1)
     df = df.astype({'id': int})
     df = df.set_index('id')
-    df = df.drop([0])
+    if 0 in df.index:
+        df = df.drop([0])
     return df
 
 
@@ -28,7 +31,7 @@ def collapse_trail_balance(tb: pd.DataFrame, month, year):
     return tb
 
 
-def read_trial_balance(xls: pd.ExcelFile, year: int, month_number: int):
+def read_trial_balance(xls: pd.ExcelFile, year: int, month_number: int) -> pd.DataFrame:
 
     months = [month[0:3].lower() for month in calendar.month_name][1:]
     print(f'year: month = {year} - {months[month_number]} [{month_number}]')
@@ -41,6 +44,5 @@ def read_trial_balance(xls: pd.ExcelFile, year: int, month_number: int):
     df = pd.read_excel(xls, sheet_name=month_number, na_values=0)
     df = df.replace(float('nan'), 0)
     return df
-
 
 

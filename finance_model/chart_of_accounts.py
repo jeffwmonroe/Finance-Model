@@ -183,6 +183,8 @@ class ChartOfAccounts:
 
         label = "error bad label"
 
+        if len(rows) == 0:
+            raise KeyError(f'no rows found for: {filter_value}')
         if len(rows) > 0:
             val = filtered_tb.iloc[0, -5:]
             pos = val.index.to_list().index(level)
@@ -198,6 +200,25 @@ class ChartOfAccounts:
         # data = data.iloc[:12]
 
         return data, label, sub_data_names
+
+    def get_data_rows(self, level, filter, yearly=False):
+        tb = self.trial_balances.copy()
+        if yearly:
+            tb['year'] = [date[:4] for date in tb.index]
+            grp = tb.groupby('year')
+            # Choose the last of each grouping. This works because the data is cumulative
+            tb = grp.tail(1).iloc[:, :-1]
+        tb = tb.T
+
+        tb['account_no'] = tb.index
+        tb = tb.merge(self.detailed_account_mapping, how='left', on='account_no')
+
+        rows = [item in filter for item in tb[level]]
+        filtered_tb = tb[rows]
+        filtered_tb = filtered_tb.set_index('account_no')
+        columns = filtered_tb.columns[-5:].to_list() + filtered_tb.columns[:-5].to_list()
+        filtered_tb = filtered_tb.loc[:, columns]
+        return filtered_tb
 
     @timer
     def plot_data(self, level, filter_value, group_by, binary=False, yearly=False):

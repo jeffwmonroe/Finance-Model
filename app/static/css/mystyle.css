@@ -1,0 +1,146 @@
+body {
+  /*background-color: whitesmoke;*/
+
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  color: navy;
+  margin-left: 20px;
+}
+
+.error {
+  color: red;
+  font-style: italic;
+}
+
+.blog {
+  vertical-align:center
+}
+.blogname {
+  color: purple;
+  font-style: italic;
+}
+.blog_name_ref {
+  font-style: italic;
+  text-decoration: underline;
+}
+i {
+  font-style: italic;
+}
+table.blog {
+ /* border: 5px solid; */
+}
+tr.blog {
+   border: inherit;
+}
+
+td.blog {
+  padding: 5px;
+  padding-right: 10px;
+}
+.blogpost {
+  color:green;
+}
+
+.userprofile {
+  text-align: center;
+  vertical-align: center;
+}
+
+.aboutme {
+  text-align: left;
+}
+
+h3.aboutme {
+  text-align: center;
+}
+td.avatar {
+  vertical-align: center;
+}
+
+td.aboutme {
+  padding: 10px;
+  padding-bottom: 1px;
+  padding-top: 1px;
+  padding-right: 1px;
+}
+.user_list_table {
+  border: 1px solid black;
+}
+
+.user_list_row {
+  border: 1px solid black;
+}
+
+.user_list_cell {
+  border: 0px solid black;
+}
+
+
+td.user_list_cell {
+  padding: 5px;
+}
+th.user_list_cell {
+  text-align: center;
+  padding: 5px;
+}
+
+.user_list_nums {
+  text-align: center;
+}
+
+
+.timestamp {
+  color: black;
+  font-style: italic;
+}
+
+.non_active_link {
+  color: gray;
+  font-style: italic;
+}
+
+.newold_button {
+  color: green;
+
+}
+
+.basic_table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+td.basic_row{
+  border: 1px solid black;
+  text-align: center;
+}
+
+
+.basic_header{
+  border: 1px solid black;
+  text-align: center;
+}
+
+tr.basic_row:hover {background-color: #D6EEEE;}
+
+.pk{
+  width: 100px;
+}
+
+.action {
+  width: 100px;
+}
+.status {
+  width: 100px;
+}
+.timestamp{
+  width: 350px;
+}
+.name{
+  width: 300px;
+}
+
+td.name{
+  text-align: left;
+}
