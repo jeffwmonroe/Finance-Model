@@ -1,31 +1,38 @@
-account_no,bs_is,category,sub_category,sub_account,account,2017-12-31,2018-12-31,2019-12-31,2020-12-31,2021-12-31,2022-12-31,2023-06-30
-11040,bs,assets,current assets,cash and equivelents,PNC Operating,106161.11,132985.04,0.0,91887.83,195671.37,27065.96,690167.41
-11050,bs,assets,current assets,cash and equivelents,PNC Payroll,157.16,578.46,34.7,3354.75,2827.51,201.03,1826.61
-11060,bs,assets,current assets,cash and equivelents,PNC Money Market,0.0,0.0,0.0,9.86,0.0,0.0,0.0
-11100,bs,assets,current assets,cash and equivelents,Wells Fargo Bank,1235.53,1235.53,0.0,0.0,0.0,0.0,0.0
-11500,bs,assets,current assets,cash and equivelents,"Cash on Hand, Petty Cash",100.0,100.0,95.29,126.73,126.73,100.0,100.0
-11600,bs,assets,current assets,accounts receivable,"Accounts Receivable, Other",0.0,0.0,10129.24,0.0,0.0,0.0,0.0
-12000,bs,assets,current assets,accounts receivable,Accounts Receivable,768095.81,783485.54,993525.97,1238718.48,1173292.39,1533534.57,774831.71
-12050,bs,assets,current assets,accounts receivable,"Accounts Receivable, Employees",2284.2,4661.7,3288.2,0.0,0.0,0.0,0.0
-12500,bs,assets,current assets,accounts receivable,Deposits & Prepaid A/R,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-17500,bs,assets,other assets,other assets,Prepaid Expenses,9212.68,106.36,348.0,232.0,116.0,377.0,377.0
-19200,bs,assets,other assets,other assets,Intangible Assets,1942707.07,1942707.07,1942707.07,1942707.07,1942707.07,0.0,0.0
-19500,bs,assets,other assets,other assets,Accumulated Amortization,-1942707.07,-1942707.07,-1942707.07,-1942707.07,-1942707.07,0.0,0.0
-20000,bs,Liabilities,current liabilities,accounts payable,Accounts Payable,0.0,0.0,-8931.79,-4767.59,0.0,0.0,-77286.68
-20005,bs,Liabilities,current liabilities,accounts payable,Negative Cash Balance,0.0,0.0,-23737.03,0.0,0.0,0.0,0.0
-20020,bs,Liabilities,current liabilities,accounts payable,Accrued Accounts Payable,0.0,0.0,0.0,0.0,0.0,0.0,-0.01
-20300,bs,Liabilities,current liabilities,accrued expenses,Accrued Bonus Payable,0.0,0.0,0.0,0.0,0.0,0.0,-22500.0
-20400,bs,Liabilities,current liabilities,other current liabilities,Notes Payable 2014 Infiniti JX,-15553.18,-6771.88,0.0,0.0,0.0,0.0,0.0
-20500,bs,Liabilities,current liabilities,other current liabilities,Notes Payable Nat. Coop Bank,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-20700,bs,Liabilities,current liabilities,other current liabilities,Notes Payable  2014 Transit,-5291.68,0.0,0.0,0.0,0.0,0.0,0.0
-20750,bs,Liabilities,current liabilities,other current liabilities,Wells Fargo Line of Credit,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-20800,bs,Liabilities,current liabilities,other current liabilities,Notes Payable 2018 Chrysler,0.0,-24448.38,-18695.82,-12943.26,-7190.7,-1438.14,0.0
-20900,bs,Liabilities,current liabilities,other current liabilities,Payroll Protection Loan,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-21000,bs,Liabilities,long term liabilities,accrued Expenses,Accured PTO,-133953.44,-139895.15,-109685.38,-94395.76,-87258.04,-91980.11,-89811.59
-21050,bs,Liabilities,long term liabilities,accrued Expenses,Accured Sick Leave,0.0,0.0,-8508.78,-26239.94,-25351.3,-25701.71,-25701.71
-22250,bs,Liabilities,long term liabilities,other long term liabilities,FFCRA Tax Credit,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-22400,bs,Liabilities,long term liabilities,other long term liabilities,MD Unemployment,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-22550,bs,Liabilities,long term liabilities,other long term liabilities,AFLAC Insurance,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-22600,bs,Liabilities,long term liabilities,other long term liabilities,401 K Payable,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-22650,bs,Liabilities,long term liabilities,other long term liabilities,Employee 401 K Loan Payable,0.0,0.0,0.0,0.0,0.0,0.0,0.0
-24000,bs,Liabilities,long term liabilities,other long term liabilities,"Notes Payable, NCB, Long Term",0.0,0.0,0.0,0.0,0.0,0.0,0.0
+account_no,bs_is,category,sub_category,sub_account,account,12/31/2017,12/31/2018,12/31/2019,12/31/2020,12/31/2021,12/31/2022,7/31/2023,,,,,,
+11040,bs,assets,current assets,cash and equivelents,PNC Operating,"106,161","132,985",0,"91,888","195,671","27,066","799,701",,,,,,
+11050,bs,assets,current assets,cash and equivelents,PNC Payroll,157,578,35,"3,355","2,828",201,841,,,,,,
+11060,bs,assets,current assets,cash and equivelents,PNC Money Market,0,0,0,10,0,0,0,,,,,,
+11100,bs,assets,current assets,cash and equivelents,Wells Fargo Bank,"1,236","1,236",0,0,0,0,0,,,,,,
+11500,bs,assets,current assets,cash and equivelents,"Cash on Hand, Petty Cash",100,100,95,127,127,100,100,,,,,,
+11600,bs,assets,current assets,accounts receivable,"Accounts Receivable, Other",0,0,"10,129",0,0,0,0,,,2020,2021,2022,
+12000,bs,assets,current assets,accounts receivable,Accounts Receivable,"768,096","783,486","993,526","1,238,718","1,173,292","1,533,535","1,316,834",,assets,"1,373,599","1,495,488","1,652,634","2,207,514"
+12050,bs,assets,current assets,accounts receivable,"Accounts Receivable, Employees","2,284","4,662","3,288",0,0,0,0,,Liabilities,"-138,347","-119,800","-119,120","-540,080"
+12500,bs,assets,current assets,accounts receivable,Deposits & Prepaid A/R,0,0,0,0,0,0,0,,,"1,235,253","1,375,688","1,533,514","1,667,434"
+14700,bs,assets,property and equiptment,property and equiptment,Furniture & Fixtures,"13,100","13,100","13,100","13,100","13,100","13,100","13,100",,,,,,
+15000,bs,assets,property and equiptment,property and equiptment,Machinery & Equipment,"107,787","107,787","107,787","107,787","111,810","111,810","111,810",,,,,,
+15200,bs,assets,property and equiptment,property and equiptment,Building,"43,496","43,496","43,496","43,496","43,496","43,496","43,496",,,,,,
+15700,bs,assets,property and equiptment,property and equiptment,Vehicles,"254,986","215,335","215,421","215,421","253,197","253,111","253,111",,,,,,
+16000,bs,assets,property and equiptment,property and equiptment,Accumulated Depreciation,"-333,998","-299,526","-328,195","-340,534","-298,149","-330,161","-331,857",,,,,,
+17500,bs,assets,other assets,other assets,Prepaid Expenses,"9,213",106,348,232,116,377,377,,,,,,
+19200,bs,assets,other assets,other assets,Intangible Assets,"1,942,707","1,942,707","1,942,707","1,942,707","1,942,707",0,0,,,,,,
+19500,bs,assets,other assets,other assets,Accumulated Amortization,"-1,942,707","-1,942,707","-1,942,707","-1,942,707","-1,942,707",0,0,,,,,,
+20000,bs,Liabilities,current liabilities,accounts payable,Accounts Payable,0,0,"-8,932","-4,768",0,0,"-215,634",,,,,,
+20005,bs,Liabilities,current liabilities,accounts payable,Negative Cash Balance,0,0,"-23,737",0,0,0,0,,,,,,
+20020,bs,Liabilities,current liabilities,accounts payable,Accrued Accounts Payable,0,0,0,0,0,0,"-143,459",,,,,,
+20300,bs,Liabilities,current liabilities,accrued expenses,Accrued Bonus Payable,0,0,0,0,0,0,"-31,500",,,,,,
+20400,bs,Liabilities,current liabilities,other current liabilities,Notes Payable 2014 Infiniti JX,"-15,553","-6,772",0,0,0,0,0,,,,,,
+20500,bs,Liabilities,current liabilities,other current liabilities,Notes Payable Nat. Coop Bank,0,0,0,0,0,0,0,,,,,,
+20700,bs,Liabilities,current liabilities,other current liabilities,Notes Payable  2014 Transit,"-5,292",0,0,0,0,0,0,,,,,,
+20750,bs,Liabilities,current liabilities,other current liabilities,Wells Fargo Line of Credit,0,0,0,0,0,0,0,,,,,,
+20800,bs,Liabilities,current liabilities,other current liabilities,Notes Payable 2018 Chrysler,0,"-24,448","-18,696","-12,943","-7,191","-1,438",0,,,,,,
+20900,bs,Liabilities,current liabilities,other current liabilities,Payroll Protection Loan,0,0,0,0,0,0,0,,,,,,
+21000,bs,Liabilities,long term liabilities,accrued Expenses,Accured PTO,"-133,953","-139,895","-109,685","-94,396","-87,258","-91,980","-86,785",,,,,,
+21050,bs,Liabilities,long term liabilities,accrued Expenses,Accured Sick Leave,0,0,"-8,509","-26,240","-25,351","-25,702","-25,702",,,,,,
+22250,bs,Liabilities,long term liabilities,other long term liabilities,FFCRA Tax Credit,0,0,0,0,0,0,0,,,,,,
+22400,bs,Liabilities,long term liabilities,other long term liabilities,MD Unemployment,0,0,0,0,0,0,0,,,,,,
+22550,bs,Liabilities,long term liabilities,other long term liabilities,AFLAC Insurance,0,0,0,0,0,0,0,,,,,,
+22600,bs,Liabilities,long term liabilities,other long term liabilities,401 K Payable,0,0,0,0,0,0,0,,,,,,
+22650,bs,Liabilities,long term liabilities,other long term liabilities,Employee 401 K Loan Payable,0,0,0,0,0,0,0,,,,,,
+23400,bs,Liabilities,long term liabilities,other long term liabilities,Deferred Income,0,0,0,0,0,0,"-37,000",,,,,,
+24000,bs,Liabilities,long term liabilities,other long term liabilities,"Notes Payable, NCB, Long Term",0,0,0,0,0,0,0,,,,,,
+,,,,,,,,,,,"$1,533,514","$1,667,434",,,,,,

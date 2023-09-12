@@ -166,7 +166,7 @@ class ChartOfAccounts:
     @timer
     def get_data_to_plot(self, level, filter_value, group_by, yearly=False):
         print(f'get_data_to_plot {level}')
-
+        print(f'level = {level}')
         tb = self.trial_balances.copy()
         if yearly:
             tb['year'] = [date[:4] for date in tb.index]
@@ -182,10 +182,13 @@ class ChartOfAccounts:
         filtered_tb = tb[rows]
 
         label = "error bad label"
+        # print(f'rows = {rows}')
+        # print(f'filtered_tb = {filtered_tb}')
+        # print(f'len(filtered_tb) = {len(filtered_tb)}')
 
-        if len(rows) == 0:
+        if len(filtered_tb) == 0:
             raise KeyError(f'no rows found for: {filter_value}')
-        if len(rows) > 0:
+        if len(filtered_tb) > 0:
             val = filtered_tb.iloc[0, -5:]
             pos = val.index.to_list().index(level)
             items = [val[item] for item in val.index]
@@ -193,7 +196,6 @@ class ChartOfAccounts:
             items.append(filter_value)
             items = pd.Series(items).drop_duplicates().to_list()
             label = " : ".join(items)
-
         group = filtered_tb.groupby(group_by)
         data = group.sum().iloc[:, :-5].T
         sub_data_names = data.columns.to_list()
