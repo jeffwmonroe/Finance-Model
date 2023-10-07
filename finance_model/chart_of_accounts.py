@@ -198,6 +198,7 @@ class ChartOfAccounts:
             label = " : ".join(items)
         group = filtered_tb.groupby(group_by)
         data = group.sum().iloc[:, :-5].T
+
         sub_data_names = data.columns.to_list()
         # data = data.iloc[:12]
 
