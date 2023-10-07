@@ -2,7 +2,7 @@ import pandas as pd
 import calendar
 from datetime import datetime
 
-import pylab as p
+# import pylab as p
 
 MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 
