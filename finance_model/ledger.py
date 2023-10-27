@@ -1,15 +1,15 @@
 
 class Ledger:
-    def __init__(self, account_no=0, description="", debit_credit="", bs_is="unknownS"):
+    def __init__(self, account_no=0, description="", debit_credit="", bs_is="unknownS") -> None:
         self.account_no: int = account_no
         self.description: str = description
         self.debit_credit: str = debit_credit
         self.bs_is: str = bs_is
 
-    def __repr__(self):
-        return f'({self.account_no}, {self.description}, {self.debit_credit}, {self.bs_is})"'
+    def __repr__(self) -> str:
+        return f'Ledger: ({self.account_no}, {self.description}, {self.debit_credit}, {self.bs_is})'
 
-    def to_dict(self):
+    def to_dict(self) ->dict[str, str | int]:
         return {'id': self.account_no,
                 'description': self.description,
                 'debit_credit': self.debit_credit,
