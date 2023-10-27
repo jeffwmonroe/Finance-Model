@@ -130,3 +130,5 @@ dmypy.json
 .dev_env
 
 documents/scratch/ratings.csv
+charts.pickle
+
