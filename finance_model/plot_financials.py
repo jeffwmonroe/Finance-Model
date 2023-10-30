@@ -28,12 +28,20 @@ def combo_legend(ax):
 
 def plot_bars(ax, date_axis, data):
     print('-' * 50)
+    print(f'ax={ax}')
+    print(f'date_axis={date_axis}')
+    print(f'data={data}')
     width = 0.8
     pos_bottom = np.zeros(len(date_axis))
     neg_bottom = np.zeros(len(date_axis))
-    prop = ax._get_lines.prop_cycler
+    # lines = ax._get_lines
+    # prop = lines.prop_cycler
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+    index = 0
     for col in data.columns:
-        color = next(prop)['color']
+        # color = next(prop)['color']
+        color = colors[index % 8]
+        index += 1
         values = data[col]
         prows = data[col] > 0
         pvalues = values.copy()

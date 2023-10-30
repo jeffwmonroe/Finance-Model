@@ -9,7 +9,7 @@ class Ledger:
     def __repr__(self) -> str:
         return f'Ledger: ({self.account_no}, {self.description}, {self.debit_credit}, {self.bs_is})'
 
-    def to_dict(self) ->dict[str, str | int]:
+    def to_dict(self) -> dict[str, str | int]:
         return {'id': self.account_no,
                 'description': self.description,
                 'debit_credit': self.debit_credit,

@@ -14,7 +14,7 @@ def unpickle_accounts():
     return account
 
 
-def pickle_accounts(account):
+def pickle_accounts(account) -> None:
     with open('charts.pickle', 'wb') as handle:
         pickle.dump(account, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -68,7 +68,7 @@ class ChartOfAccounts:
                 if account.description != description:
                     raise Exception(f'ERROR account_no={account_no} description mismatch')
 
-    def build_detailed_account_mapping(self):
+    def build_detailed_account_mapping(self) -> None:
         cols = [col for col in self.trial_balances.columns]
         blanks = [None] * len(cols)
         df_data = {'account_no': cols,
