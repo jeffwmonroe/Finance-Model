@@ -25,7 +25,12 @@ def handle_increase_decrease(form, chart_number):
 
 
 @app.route("/", methods=["GET", "POST"])
-def home_page():
+def home():
+    return render_template("home.html")
+
+
+@app.route("/matplotlib_bar", methods=["GET", "POST"])
+def matplotlib_bar():
     print('-' * 50)
     print(f'home page:  {request.method}')
     accounts: ChartOfAccounts = get_chart_of_accounts()
@@ -82,4 +87,4 @@ def home_page():
     # form.sub_categories.size = len(chs)
     print(f'sub_data_names = {sub_data_names}')
     # return f"<img src='data:image/png;base64,{data}'/>"
-    return render_template("home.html", chart=data, form=form)
+    return render_template("matplotlib_bar.html", chart=data, form=form)

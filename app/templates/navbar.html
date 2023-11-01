@@ -1,0 +1,29 @@
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Finance Model</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            MATPLOTLIB
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/matplotlib_bar">Bar Chart</a></li>
+                            <li><a href="/reconnect_db">Reset</a></li>
+                            <li><a href="/api/schema">Schema</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Bokeh
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/">Home</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}

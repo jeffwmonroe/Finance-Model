@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Chart of Accounts</h2>
+<form action="", method="post", novalidate>
+    {{ form.hidden_tag() }}
+
+    {{ form.decrease() }}
+    {{ form.chart_number.label }}
+    {{ form.chart_number() }}
+    {{ form.increase() }}
+    {{ form.yearly.label }}
+    {{ form.yearly() }}<br>
+    {{ form.submit() }}
+    {{ form.level.label }}
+    {{ form.level() }} <br>
+    {{ form.sub_categories.label }} <br>
+    {{ form.sub_categories() }} <br>
+    {{ form.category() }}
+</form>
+<hr>
+
+<img src='data:image/png;base64,{{ chart }}'/>
+
+{% endblock %}}
