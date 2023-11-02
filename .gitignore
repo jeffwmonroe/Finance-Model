@@ -126,9 +126,9 @@ dmypy.json
 .idea/
 .venv/
 
-# environment file for dev builds
-.dev_env
+# Project specific
 
-documents/scratch/ratings.csv
-charts.pickle
+
+data/processed/
+
 

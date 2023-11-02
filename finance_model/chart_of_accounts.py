@@ -5,17 +5,19 @@ from finance_model.read_trial_balances import read_trial_balance, check_debit_cr
 from itertools import compress
 from finance_model.plot_financials import finance_plot
 import pickle
-
+from config import config
 
 @timer
 def unpickle_accounts():
-    with open('charts.pickle', 'rb') as handle:
+    with open(config['coa_pickle'], 'rb') as handle:
         account = pickle.load(handle)
     return account
 
 
 def pickle_accounts(account) -> None:
-    with open('charts.pickle', 'wb') as handle:
+    # ToDo data structure fix
+    # Also move this into class
+    with open(config['coa_pickle'], 'wb') as handle:
         pickle.dump(account, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
@@ -90,7 +92,7 @@ class ChartOfAccounts:
         """
         Read in the account mapping file and stores it in self.account_mapping
         """
-        df = pd.read_excel('documents\\chart_of_accounts_mapping.xlsx')
+        df = pd.read_excel(config['coa_map'])
         df['bs_is'] = df['bs_is'].astype('category')
         self.account_mapping = df
 
@@ -107,7 +109,7 @@ class ChartOfAccounts:
         for year in years:
             print(f'year = {year}')
             filename = f"HazTrain TB.{year} by month GENAESIS Confidential.xlsx"
-            path = f'documents\\trial_balances\\{filename}'
+            path = f'{config["tb_dir"]}/{filename}'
             xls = pd.ExcelFile(path)
             # wb = load_workbook(path)
             sheets = xls.sheet_names
@@ -125,7 +127,6 @@ class ChartOfAccounts:
         df = df.sort_index(axis=1)
         self.trial_balances = df
 
-
         self.build_detailed_account_mapping()
 
     def sorted_accounts(self):
@@ -139,7 +140,8 @@ class ChartOfAccounts:
         sorted_accounts = [ledger.to_dict() for ledger in sorted_accounts]
         df = pd.DataFrame(sorted_accounts)
 
-        df.to_csv('chart of accounts.csv')
+        # ToDo data structure fix
+        df.to_csv(config['coa_csv'])
 
     def sub_account_cols(self, sub_account):
         map_row = self.account_mapping.iloc[sub_account]

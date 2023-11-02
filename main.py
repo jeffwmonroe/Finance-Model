@@ -1,6 +1,6 @@
 from finance_model import ChartOfAccounts, unpickle_accounts, pickle_accounts
 import pickle
-
+from config import config
 
 def main():
     if True:
