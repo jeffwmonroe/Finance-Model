@@ -126,9 +126,11 @@ dmypy.json
 .idea/
 .venv/
 
-# Project specific
+############################################################
+#                       Project specific
 
 
-data/processed/
+data/processed/*
+!data/processed/.gitkeep
 
 
