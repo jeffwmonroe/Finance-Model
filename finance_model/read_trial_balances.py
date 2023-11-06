@@ -51,7 +51,7 @@ def collapse_trail_balance(tb: pd.DataFrame, month: int, year: int) -> pd.DataFr
     day = calendar.monthrange(year, month)[1]
     date = datetime(year, month, day)
     date_str = date.strftime('%Y-%m-%d')
-    tb[date_str] = tb['debit'] - tb['credit']
+    tb[date_str] = tb['credit'] - tb['debit']
     collapsed_tb = tb[[date_str]]
     total = collapsed_tb[date_str].sum()
     total = round(total, 6)

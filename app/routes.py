@@ -60,14 +60,14 @@ def matplotlib_bar():
         form.level.data = plot_level
         form.yearly.data = yearly
 
-    categories = accounts.account_mapping.columns.to_list()[2:]
+    categories = accounts.account_map.columns.to_list()[2:]
     categories.append('account')
     print(f'categories = {categories}')
 
     group_level = plot_level + 1
     level = categories[plot_level]
     group_by = categories[group_level]
-    level_names = accounts.account_mapping[level].unique()
+    level_names = accounts.account_map[level].unique()
     print(f'levels = {level_names} : {len(level_names)}')
     item = level_names[chart_number]
 
