@@ -108,7 +108,9 @@ class ChartOfAccounts:
                    AccountLevel.SUBCATEGORY2: [],
                    AccountLevel.ACCOUNT: [],
                    }
-        for account in self.accounts.values():
+        # for account in self.accounts.values():
+        for account_no in self.trial_balances.columns.to_list():
+            account = self.accounts[account_no]
             acct_dict = account.to_dict()
             for k, v in df_data.items():
                 v.append(acct_dict[k])
@@ -128,6 +130,8 @@ class ChartOfAccounts:
                                                        categories=[i for i in SUBCATEGORY2])
         df[AccountLevel.NORMAL_BALANCE] = pd.Categorical(df[AccountLevel.NORMAL_BALANCE],
                                                          categories=[i for i in DebitCredit])
+        rows = df[AccountLevel.SUBCATEGORY2].isna()
+        df.loc[rows, AccountLevel.SUBCATEGORY2] = SUBCATEGORY2.NONE
         self.account_map = df
 
     @timer

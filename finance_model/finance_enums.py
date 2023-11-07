@@ -43,7 +43,7 @@ class CATEGORY(str, Enum):
 
 class SUBCATEGORY(str, Enum):
     CURRENT_ASSETS = 'current assets'
-    OTHER_ASSETS = 'other assets'
+    LONG_TERM_ASSETS = 'long term assets'
     CURRENT_LIABILITIES = 'current liabilities'
     LONG_TERM_LIABILITIES = 'long term liabilities'
     STOCK = 'stock'
@@ -68,10 +68,12 @@ class SUBCATEGORY2(str, Enum):
     CASH_AND_EQUIVALENTS = 'cash and equivalents'
     ACCOUNTS_RECEIVABLE = 'accounts receivable'
     PROPERTY_AND_EQUIPMENT = 'property and equipment'
+    OTHER_ASSETS = 'other assets'
     ACCOUNTS_PAYABLE = 'accounts payable'
     ACCRUED_EXPENSES = 'accrued expenses'
     OTHER_CURRENT_LIABILITIES = 'other current liabilities'
     OTHER_LONG_TERM_LIABILITIES = 'other long term liabilities'
+    NONE = 'none'
 
     def __str__(self):
         return self.name
