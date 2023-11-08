@@ -29,8 +29,11 @@ class ChartOfAccounts:
     def __init__(self):
         # account_map is a generic mapping of a range of account numbers to accounts.
         # It is only used to build the detailed account_map
+        self.account_map_order = {}
         self.account_map: pd.DataFrame | None = None
-        self.read_account_mapping()
+
+        self.read_account_map()
+        self.build_map_order()
 
         self.accounts: dict[str, AccountDescription] = {}
         self.trial_balances: pd.DataFrame  | None = None
@@ -118,7 +121,21 @@ class ChartOfAccounts:
         df = pd.DataFrame(df_data)
         self.detailed_account_map = df
 
-    def read_account_mapping(self) -> None:
+    def build_map_order(self):
+        """
+        Build a map order dictionary for the category tuples
+
+        The pandas groupby method does not maintain order. This method provides the ordering of the
+        category tupples. This depends on the account_map.csv file to be in order - and it has
+        to be in order by the way that it is constructed.
+        """
+        category_slice = self.account_map.loc[:, AccountLevel.CATEGORY:AccountLevel.SUBCATEGORY2]
+        self.account_map_order = {}
+        for i in range(len(category_slice)):
+            category_tuple = tuple(category_slice.iloc[i, :])
+            self.account_map_order[category_tuple] = i
+
+    def read_account_map(self) -> None:
         """
         Read in the account mapping file and stores it in self.account_map
         """
