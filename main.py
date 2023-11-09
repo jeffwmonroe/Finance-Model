@@ -72,7 +72,7 @@ def balance(yearly, write_accounts):
         # print(cat)
         # print(df)
         # break
-        top.insert_children(catlist)
+        top.insert_children(catlist, df)
 
     top.print()
 
