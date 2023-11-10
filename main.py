@@ -57,22 +57,12 @@ def balance(yearly, write_accounts):
 
     grp2 = tb2.groupby([AccountLevel.CATEGORY, AccountLevel.SUBCATEGORY, AccountLevel.SUBCATEGORY2], sort=False)
     # grp2
-
-    top = FinNode('BS')
-    group_list = [cat for cat, df in grp2]
-    group_list.sort(key=lambda val: account.account_map_order[val])
-    # for group in group_list:
-    #     print(f'group = {group}')
-    # print(f'group_list = {group_list}')
-    # for cat in group_list:
+    max_depth = 4
+    top = FinNode('BS', max_depth)
     for cat, df in grp2:
         print(f'cat = {cat}')
         catlist = deque(cat)
-        # df = grp2
-        # print(cat)
-        # print(df)
-        # break
-        top.insert_children(catlist, df)
+        top.insert_children(catlist, df, max_depth)
 
     top.print()
 

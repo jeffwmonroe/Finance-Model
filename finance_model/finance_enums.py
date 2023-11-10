@@ -77,3 +77,6 @@ class SUBCATEGORY2(str, Enum):
 
     def __str__(self):
         return self.name
+
+
+type FIN_CATEGORY = CATEGORY | SUBCATEGORY | SUBCATEGORY2
