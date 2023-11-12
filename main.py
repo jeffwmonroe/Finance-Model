@@ -60,7 +60,7 @@ def balance(yearly, write_accounts):
     max_depth = 4
     top = FinNode('BS', max_depth)
     for cat, df in grp2:
-        print(f'cat = {cat}')
+        # print(f'cat = {cat}')
         catlist = deque(cat)
         top.insert_children(catlist, df, max_depth)
 
