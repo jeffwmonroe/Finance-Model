@@ -6,5 +6,3 @@ flask_wtf
 jupyter
 matplotlib
 python-dotenv
-bokeh
-click
