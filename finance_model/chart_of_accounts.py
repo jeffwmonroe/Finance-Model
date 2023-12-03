@@ -5,12 +5,19 @@ from finance_model.read_trial_balances import read_trial_balance, check_debit_cr
 from itertools import compress
 from finance_model.plot_financials import finance_plot
 import pickle
+import os
 from config import config
 from finance_model.finance_enums import AccountLevel, IS_BS, CATEGORY, SUBCATEGORY, SUBCATEGORY2, DebitCredit
+
+
 @timer
 def unpickle_accounts():
-    with open(config['coa_pickle'], 'rb') as handle:
-        account = pickle.load(handle)
+    try:
+        with open(config['coa_pickle'], 'rb') as handle:
+            account = pickle.load(handle)
+    except FileNotFoundError as e:
+        print(f'Error pickle file not found: {config["coa_pickle"]}')
+        raise e
     return account
 
 
@@ -22,10 +29,17 @@ def pickle_accounts(account) -> None:
         pickle.dump(account, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
+def clear_pickle() -> None:
+    if os.path.exists(config['coa_pickle']):
+        print('Removing the pickle file')
+        os.remove(config['coa_pickle'])
+
+
 class ChartOfAccounts:
     """
 
     """
+
     def __init__(self):
         # account_map is a generic mapping of a range of account numbers to accounts.
         # It is only used to build the detailed account_map
@@ -36,7 +50,7 @@ class ChartOfAccounts:
         self.build_map_order()
 
         self.accounts: dict[str, AccountDescription] = {}
-        self.trial_balances: pd.DataFrame  | None = None
+        self.trial_balances: pd.DataFrame | None = None
         self.detailed_account_map = None
 
     def get_account_mapping(self, account_no: int) -> pd.DataFrame:

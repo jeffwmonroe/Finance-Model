@@ -1,4 +1,4 @@
-from finance_model import ChartOfAccounts, unpickle_accounts, pickle_accounts
+from finance_model import ChartOfAccounts, unpickle_accounts, pickle_accounts, clear_pickle
 from finance_model import AccountLevel, IS_BS, FinNode
 from collections import OrderedDict, deque
 import pickle
@@ -19,6 +19,11 @@ def read():
     print(account.trial_balances)
 
     pickle_accounts(account)
+
+
+@cli.command()
+def clear():
+    clear_pickle()
 
 
 @cli.command()
