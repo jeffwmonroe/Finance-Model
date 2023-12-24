@@ -4,7 +4,9 @@ from collections import OrderedDict, deque
 import pickle
 from config import config
 import click
-
+import pandas as pd
+from banking import Check
+import datetime
 
 @click.group()
 def cli():
@@ -72,10 +74,38 @@ def balance(yearly, write_accounts):
     top.print()
 
 
+@cli.command()
+def checks() -> None:
+    print(f"Checks: {config['peach_tree_checks']}")
+    peachtree_df = pd.ExcelFile(config['peach_tree_checks'])
+
+    peachtree_df = pd.read_excel(peachtree_df, dtype={"Check #": str,
+                                                      "Cash Account": str})
+    peachtree_df = peachtree_df.iloc[:len(peachtree_df) - 2, :]
+    print(peachtree_df.dtypes)
+
+    pnc_df = pd.read_csv(config['pnc_checks'],
+                         dtype={"Serial Number": str,
+                                "Amount": str,
+                                "Account Number": str},
+                         parse_dates=['Issue Date', 'Paid Date', 'Stop Effective Date', 'Stop Expiry Date'])
+    pnc_df['Amount'] = pnc_df['Amount'].str.replace('$', '')
+    pnc_df['Amount'] = pnc_df['Amount'].str.replace(',', '')
+    pnc_df['Amount'] = pnc_df['Amount'].astype('float')
+    pnc_df = pnc_df.rename(columns={"Amount": "PNC Amount"})
+    print(pnc_df.dtypes)
+
+    merged_df = peachtree_df.merge(pnc_df, left_on="Check #", right_on="Serial Number", how='left')
+    print(merged_df)
+    checks = {check[1]["Check #"]: Check(check[1]) for check in peachtree_df.iterrows()}
+
+    print("checks:")
+    print(pnc_df.columns)
+
+    merged_df.to_excel(config['check_output'])
+
 def main():
-    print('before cli')
     cli()
-    print('after cli')
 
 
 if __name__ == '__main__':
