@@ -6,6 +6,7 @@ from config import config
 import click
 import pandas as pd
 from banking import Check
+from banking import read_peachtree, process_checks, write_issue_void
 import datetime
 
 @click.group()
@@ -76,6 +77,13 @@ def balance(yearly, write_accounts):
 
 @cli.command()
 def checks() -> None:
+    peachtree_df = read_peachtree()
+    print(peachtree_df)
+    check_df = process_checks(peachtree_df)
+    write_issue_void(check_df)
+
+
+def old_check_code() -> None:
     print(f"Checks: {config['peach_tree_checks']}")
     peachtree_df = pd.ExcelFile(config['peach_tree_checks'])
 
