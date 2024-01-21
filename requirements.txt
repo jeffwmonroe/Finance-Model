@@ -6,3 +6,4 @@ flask_wtf
 jupyter
 matplotlib
 python-dotenv
+click

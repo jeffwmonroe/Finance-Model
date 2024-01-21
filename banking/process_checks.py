@@ -54,7 +54,7 @@ def process_checks(peachtree_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def write_issue_void(check_df: pd.DataFrame) -> None:
-    # ToDo fis the account_number hack
+    # ToDo fix the account_number hack
     account_number = '5559464829'
     with open(f'{config['processed_dir']}/ISSUEVOIDFW.txt', 'w') as f:
         for index, check in check_df.iterrows():

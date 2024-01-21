@@ -76,10 +76,15 @@ def balance(yearly, write_accounts):
 
 
 @cli.command()
-def checks() -> None:
+@click.option("-c", "--last_check", )
+def checks(last_check: str) -> None:
     peachtree_df = read_peachtree()
     print(peachtree_df)
     check_df = process_checks(peachtree_df)
+    if last_check is not None:
+        check_mask = check_df["Check #"] > last_check
+        check_df = check_df[check_mask]
+        print(check_df)
     write_issue_void(check_df)
 
 
