@@ -7,6 +7,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
 from config import config
 
 # If modifying these scopes, delete the file token.json.
@@ -23,9 +24,6 @@ def trimmed_ds(date_str: str) -> datetime.datetime:
 
 
 def main():
-    """Shows basic usage of the Google Calendar API.
-  Prints the start and name of the next 10 events on the user's calendar.
-  """
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -58,10 +56,14 @@ def main():
         dec = datetime.datetime(2023, 12, 31, 11, 59, 59).isoformat() + "Z"
         print(f'jan = {jan}')
         print(f'dec = {dec}')
+        print('-'*15)
+        print(service.events())
+        print('-'*15)
         events_result = (
             service.events()
             .list(
                 calendarId="haztraintraining@gmail.com",
+                # calendarId="monroe.jeffw@gmail.com",
                 timeMin=jan,
                 timeMax=dec,
                 # maxResults=10,

@@ -7,3 +7,5 @@ jupyter
 matplotlib
 python-dotenv
 click
+
+gcsa
