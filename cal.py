@@ -39,6 +39,7 @@ def main():
             inst_df.loc[instructor, "Travel"] = inst_df.loc[instructor, "Travel"] + 2
         elif location == hc.ClassLocation.Virtual:
             inst_df.loc[instructor, "Virtual"] = inst_df.loc[instructor, "Virtual"] + delta.days
+        print(f'{start} - {end} {summary} [{delta}] : [{event.event_id}]')
 
     inst_df["Total"] = inst_df.loc[:, ["Virtual", "In Person", "Travel", "Holiday", "PTO", "Sick"]].sum(axis=1)
     inst_df["Perc"] = inst_df.loc[:, "Total"] / 2080 * 8

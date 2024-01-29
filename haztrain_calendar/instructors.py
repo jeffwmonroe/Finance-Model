@@ -16,7 +16,7 @@ def get_instructor_info():
                             "Travel": [0 ] *len(instructor_list),
                             "Holiday": [9 ] *len(instructor_list),
                             "PTO": instructor_pto,
-                            "Sick": [10 ] *len(instructor_list),
+                            "Sick": [0 ] *len(instructor_list),
                             # "Pay": instructor_pay,
                             },
                            index=instructor_list)
