@@ -61,12 +61,12 @@ def read_pnc() -> pd.DataFrame:
     # print("Join df")
     print("Not paid")
     print(issue_not_paid)
-    print("Paid Join")
-    print(paid_join)
-    "Issued Check"
-    "Paid Check"
-    "Stop Payment"
-    "Issued Check - VOID"
+    # print("Paid Join")
+    # print(paid_join)
+    # "Issued Check"
+    # "Paid Check"
+    # "Stop Payment"
+    # "Issued Check - VOID"
 
     # gg = pnc_df.loc[:, "Amount"]
     # print(f"gg ={gg}")
