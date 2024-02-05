@@ -4,16 +4,74 @@ from config import config
 
 
 def read_peachtree() -> pd.DataFrame:
-    peachtree_df = pd.ExcelFile(config['peach_tree_checks'])
+    peachtree_file = pd.ExcelFile(config['peach_tree_checks'])
 
-    peachtree_df = pd.read_excel(peachtree_df, dtype={"Check #": str,
-                                                      "Cash Account": str})
+    peachtree_df = pd.read_excel(peachtree_file, dtype={"Check #": str,
+                                                        "Cash Account": str})
 
     if peachtree_df.iloc[len(peachtree_df) - 1, 0] == "Total":
         peachtree_df = peachtree_df.iloc[:len(peachtree_df) - 2, :]
     print(peachtree_df.dtypes)
     peachtree_df.loc[peachtree_df["Amount"].isna(), "Amount"] = 0
     return peachtree_df
+
+
+def read_pnc() -> pd.DataFrame:
+    pnc_file = pd.ExcelFile(config['pnc_checks'])
+    pnc_df = pd.read_excel(pnc_file)
+    col = pnc_df.iloc[1, :]
+    pnc_df.columns = col
+    pnc_df = pnc_df.iloc[2:, :]
+    pnc_df = pnc_df.drop(["Account Number", "Account Name", "Add'l Data", "Payee Name 2"], axis=1)
+    pnc_df = pnc_df.set_index("Serial Number")
+
+    pnc_df["Amount"] = pnc_df["Amount"].str[1:]
+    pnc_df["Amount"] = pnc_df["Amount"].str.replace(",", "")
+    pnc_df = pnc_df.astype({"Amount": float})
+    pnc_df["Issue Date"] = pd.to_datetime(pnc_df["Issue Date"])
+    pnc_df["Paid Date"] = pd.to_datetime(pnc_df["Paid Date"])
+    pnc_df["Stop Effective Date"] = pd.to_datetime(pnc_df["Stop Effective Date"])
+    pnc_df["Stop Expiry Date"] = pd.to_datetime(pnc_df["Stop Expiry Date"])
+
+    issued_df = pnc_df.loc[pnc_df["Description"] == "Issued Check", :]
+    paid_df = pnc_df.loc[pnc_df["Description"] == "Paid Check", ["Description", "Paid Date"]]
+    # This will contain all of the checks that were issued before positive pay
+    #    They will have an issue and a pay
+    #    They will need to be fixed by merging pay info into the issue data
+    #    This occurs because the check was issued and paid prior to positive pay
+    # Also the checks that have been issued but not paid
+    #    They will have an issue but no pay
+    issue_join = issued_df.join(paid_df, how='left', rsuffix='_pd')
+
+    paid_mask = issue_join["Description_pd"] == "Paid Check"
+    issue_paid = issue_join.loc[paid_mask, :]
+    issue_paid["Description"] = "Paid Check"
+    issue_paid["Paid Date"] = issue_paid["Paid Date_pd"]
+    issue_paid = issue_paid.loc[:, "Description":"Payee Name 1"]
+    # print("Index:")
+    # print(issue_paid.index)
+    print("Issue Paid:")
+    print(issue_paid)
+    # issue_not_paid = issue_join.loc[issue_join["Description_pd"] != "Paid Check", :]
+    issue_not_paid = issue_join.loc[paid_mask == False, "Description":"Payee Name 1"]
+    paid_join = pnc_df.loc[pnc_df["Description"] == "Paid Check"].join(issued_df.loc[:, ["Description"]], how='left',
+                                                                       rsuffix="_is")
+    paid_join = paid_join.loc[paid_join["Description_is"] != "Issued Check","Description":"Payee Name 1"]
+    # rjoin_df = issued_df.join(paid_df, how='right', rsuffix='_pd')
+    # print("Join df")
+    print("Not paid")
+    print(issue_not_paid)
+    print("Paid Join")
+    print(paid_join)
+    "Issued Check"
+    "Paid Check"
+    "Stop Payment"
+    "Issued Check - VOID"
+
+    # gg = pnc_df.loc[:, "Amount"]
+    # print(f"gg ={gg}")
+    # print(pnc_df.dtypes)
+    return pnc_df
 
 
 def process_checks(peachtree_df: pd.DataFrame) -> pd.DataFrame:
