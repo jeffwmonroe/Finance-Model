@@ -6,15 +6,22 @@ from config import config
 import click
 import pandas as pd
 from banking import Check
-from banking import read_peachtree, process_checks, write_issue_void
+from banking import read_peachtree, process_checks, write_issue_void, read_pnc
 import datetime
 
+
 @click.group()
-def cli():
+def wacky():
+    """Application for helping to manage company"""
+
+
+@wacky.group()
+def finance():
+    """finance group of commands"""
     print('inside of cli')
 
 
-@cli.command()
+@finance.command()
 def read():
     print("read trial balances")
     account = ChartOfAccounts()
@@ -24,12 +31,12 @@ def read():
     pickle_accounts(account)
 
 
-@cli.command()
+@finance.command()
 def clear():
     clear_pickle()
 
 
-@cli.command()
+@finance.command()
 @click.option("-y", "--yearly", is_flag=True)
 @click.option("-w", "--write_accounts", is_flag=True)
 def balance(yearly, write_accounts):
@@ -75,9 +82,18 @@ def balance(yearly, write_accounts):
     top.print()
 
 
-@cli.command()
-@click.option("-c", "--last_check", )
-def checks(last_check: str) -> None:
+@wacky.group()
+def bank():
+    """Bank group of commands"""
+    pass
+
+
+@click.command()
+@click.option("-lc", "--last_check",
+              default=None,
+              help="the last check number sent to PNC")
+def process(last_check: str) -> None:
+    """Process checks from Peach Tree for use with Positive Pay"""
     peachtree_df = read_peachtree()
     print(peachtree_df)
     check_df = process_checks(peachtree_df)
@@ -86,6 +102,19 @@ def checks(last_check: str) -> None:
         check_df = check_df[check_mask]
         print(check_df)
     write_issue_void(check_df)
+
+
+@click.command()
+def outstanding():
+    """Calculate balance of outstanding checks"""
+    print("Calculating the balance of outstanding checks!")
+    peachtree_df = read_peachtree()
+    # print(peachtree_df)
+    pnc_df = read_pnc()
+    # print(pnc_df)
+
+bank.add_command(process)
+bank.add_command(outstanding)
 
 
 def old_check_code() -> None:
@@ -117,8 +146,11 @@ def old_check_code() -> None:
 
     merged_df.to_excel(config['check_output'])
 
+
 def main():
-    cli()
+    """Main function"""
+    # finance()
+    wacky()
 
 
 if __name__ == '__main__':
