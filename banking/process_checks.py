@@ -16,8 +16,55 @@ def read_peachtree() -> pd.DataFrame:
     return peachtree_df
 
 
-def read_pnc() -> pd.DataFrame:
-    pnc_file = pd.ExcelFile(config['pnc_checks'])
+def process_pnc_initial(pnc_df: pd.DataFrame):
+    #########################################
+    # In the initial data pull from PNC a check will sometimes be listed two times. This is for the
+    # Checks that were processed before positive pay. The first instance will be the Issued Check and
+    # the second instance will be the Paid Check.  The Paid check row will have the positive pay information.
+    # The following code finds the duplicates, keeps the positive pay information, but then removes the
+    # duplicate rows.
+    issued_df = pnc_df.loc[pnc_df["Description"] == "Issued Check", :]
+    paid_df = pnc_df.loc[pnc_df["Description"] == "Paid Check", ["Description", "Paid Date"]]
+    double_entry_df = issued_df.join(paid_df, how='inner', rsuffix='_pd')
+    double_entry_df["Description"] = "Paid Check"
+    double_entry_df["Paid Date"] = double_entry_df["Paid Date_pd"]
+    double_entry_df = double_entry_df.loc[:, "Description":"Payee Name 1"]
+
+    single_entry_df = pnc_df[~pnc_df.index.duplicated(keep=False)]
+
+    processed_df = pd.concat([single_entry_df, double_entry_df]).sort_index()
+    # print(processed_df)
+    return processed_df
+
+
+def process_pnc_update(pnc_df, update_df):
+    # print('-' * 30)
+    # print(f'process_pnc_update: ({id(pnc_df)} {len(pnc_df.index)}), ({id(update_df)} {len(update_df.index)})')
+    return_value = pnc_df.copy()
+    # print('-' * 10)
+    # print(return_value)
+    paid_df = update_df.loc[update_df["Description"] == "Paid Check", ["Description", "Paid Date"]]
+    merged_df = return_value.join(paid_df, how='left', rsuffix='_pd')
+    # print(f'   merged_df: ({id(merged_df)}, {len(merged_df.index)})')
+    # print(merged_df)
+    mask = (~merged_df['Description_pd'].isna()) & (merged_df['Description'] == 'Issued Check')
+    # print(merged_df[mask & mask2])
+    return_value.loc[mask, "Paid Date"] = merged_df.loc[mask, "Paid Date_pd"]
+    return_value.loc[mask, "Description"] = "Paid Check"
+
+    issued_df = update_df.loc[update_df["Description"] == "Issued Check", :]
+    merged_df = issued_df.join(return_value.loc[:, ["Description", "Payee Name 1"]], how='left', rsuffix='_pd')
+    merged_df = merged_df.loc[ merged_df['Description_pd'].isna(), "Description":"Payee Name 1"]
+    return_value = pd.concat([return_value, merged_df]).sort_index()
+    # print(merged_df)
+    # return_value = pd.concat([return_value, issued_df])
+    # return_value = return_value[return_value.index.duplicated(keep='first')]
+    # print('return_value')
+    # print(return_value)
+    return return_value
+
+
+def read_pnc(pnc_file) -> pd.DataFrame:
     pnc_df = pd.read_excel(pnc_file)
     col = pnc_df.iloc[1, :]
     pnc_df.columns = col
@@ -32,35 +79,22 @@ def read_pnc() -> pd.DataFrame:
     pnc_df["Paid Date"] = pd.to_datetime(pnc_df["Paid Date"])
     pnc_df["Stop Effective Date"] = pd.to_datetime(pnc_df["Stop Effective Date"])
     pnc_df["Stop Expiry Date"] = pd.to_datetime(pnc_df["Stop Expiry Date"])
+    return pnc_df
 
-    issued_df = pnc_df.loc[pnc_df["Description"] == "Issued Check", :]
-    paid_df = pnc_df.loc[pnc_df["Description"] == "Paid Check", ["Description", "Paid Date"]]
-    # This will contain all of the checks that were issued before positive pay
-    #    They will have an issue and a pay
-    #    They will need to be fixed by merging pay info into the issue data
-    #    This occurs because the check was issued and paid prior to positive pay
-    # Also the checks that have been issued but not paid
-    #    They will have an issue but no pay
-    issue_join = issued_df.join(paid_df, how='left', rsuffix='_pd')
 
-    paid_mask = issue_join["Description_pd"] == "Paid Check"
-    issue_paid = issue_join.loc[paid_mask, :]
-    issue_paid["Description"] = "Paid Check"
-    issue_paid["Paid Date"] = issue_paid["Paid Date_pd"]
-    issue_paid = issue_paid.loc[:, "Description":"Payee Name 1"]
+def dummy():
     # print("Index:")
     # print(issue_paid.index)
     print("Issue Paid:")
-    print(issue_paid)
+    # print(issue_paid)
     # issue_not_paid = issue_join.loc[issue_join["Description_pd"] != "Paid Check", :]
-    issue_not_paid = issue_join.loc[paid_mask == False, "Description":"Payee Name 1"]
     paid_join = pnc_df.loc[pnc_df["Description"] == "Paid Check"].join(issued_df.loc[:, ["Description"]], how='left',
                                                                        rsuffix="_is")
-    paid_join = paid_join.loc[paid_join["Description_is"] != "Issued Check","Description":"Payee Name 1"]
+    paid_join = paid_join.loc[paid_join["Description_is"] != "Issued Check", "Description":"Payee Name 1"]
     # rjoin_df = issued_df.join(paid_df, how='right', rsuffix='_pd')
     # print("Join df")
     print("Not paid")
-    print(issue_not_paid)
+    # print(issue_not_paid)
     # print("Paid Join")
     # print(paid_join)
     # "Issued Check"

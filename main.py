@@ -6,7 +6,7 @@ from config import config
 import click
 import pandas as pd
 from banking import Check
-from banking import read_peachtree, process_checks, write_issue_void, read_pnc
+from banking import read_peachtree, process_checks, write_issue_void, read_pnc, process_pnc_initial, process_pnc_update
 import datetime
 
 
@@ -110,9 +110,27 @@ def outstanding():
     print("Calculating the balance of outstanding checks!")
     peachtree_df = read_peachtree()
     # print(peachtree_df)
-    pnc_df = read_pnc()
+    pnc_file = pd.ExcelFile(config['pnc_checks'])
+    pnc_df = read_pnc(pnc_file)
+    pnc_df = process_pnc_initial(pnc_df)
+    # print('-' * 50)
+    # print('pnc DF after initial process')
     # print(pnc_df)
 
+    update_files = ["pnc report 5 feb.xlsx", "pnc report 12 feb.xlsx"]
+    # update_files = ["pnc report 5 feb.xlsx"]
+    update_files = [f"{config['check_dir']}/{file}" for file in update_files]
+
+    for file in update_files:
+        update_df = read_pnc(file)
+        print(f'file = {file}')
+        pnc_df = process_pnc_update(pnc_df, update_df)
+    print('-' * 70)
+    print('final result')
+    print(pnc_df)
+    pnc_df.to_excel(config['processed_check_output'])
+
+    print(update_files)
 bank.add_command(process)
 bank.add_command(outstanding)
 
@@ -131,7 +149,7 @@ def old_check_code() -> None:
                                 "Amount": str,
                                 "Account Number": str},
                          parse_dates=['Issue Date', 'Paid Date', 'Stop Effective Date', 'Stop Expiry Date'])
-    pnc_df['Amount'] = pnc_df['Amount'].str.replace('$', '')
+    pnc_df['Amount'] = pnc_df['Amount'].str.replace('$_', '')
     pnc_df['Amount'] = pnc_df['Amount'].str.replace(',', '')
     pnc_df['Amount'] = pnc_df['Amount'].astype('float')
     pnc_df = pnc_df.rename(columns={"Amount": "PNC Amount"})
