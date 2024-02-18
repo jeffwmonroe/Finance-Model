@@ -117,7 +117,11 @@ def outstanding():
     # print('pnc DF after initial process')
     # print(pnc_df)
 
-    update_files = ["pnc report 5 feb.xlsx", "pnc report 12 feb.xlsx", "pnc report 15 feb.xlsx",]
+    update_files = ["pnc report 5 feb.xlsx",
+                    "pnc report 12 feb.xlsx",
+                    "pnc report 15 feb.xlsx",
+                    "pnc report 18 feb.xlsx",
+                    ]
     # update_files = ["pnc report 5 feb.xlsx"]
     update_files = [f"{config['check_dir']}/{file}" for file in update_files]
 
@@ -128,9 +132,12 @@ def outstanding():
     print('-' * 70)
     print('final result')
     mask = (pnc_df["Description"] == "Issued Check")
-    print(f'mask = {mask} {type(mask)}')
 
-    print(pnc_df.loc[pnc_df["Description"] == "Issued Check", :])
+    print(pnc_df.loc[pnc_df["Description"] == "Issued Check", ['Description',
+                                                               'Amount',
+                                                               'Issue Date',
+                                                               'Paid Date',
+                                                               'Payee Name 1']])
     print(f'Outstanding Amount = ${pnc_df.loc[pnc_df["Description"] == "Issued Check", "Amount"].sum():,.2f}')
     pnc_df.to_excel(config['processed_check_output'])
 
