@@ -121,6 +121,8 @@ def outstanding():
                     "pnc report 12 feb.xlsx",
                     "pnc report 15 feb.xlsx",
                     "pnc report 18 feb.xlsx",
+                    "pnc report 21 feb.xlsx",
+                    "pnc report 2 mar.xlsx",
                     ]
     # update_files = ["pnc report 5 feb.xlsx"]
     update_files = [f"{config['check_dir']}/{file}" for file in update_files]

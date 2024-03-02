@@ -11,7 +11,13 @@ import haztrain_calendar as hc
 
 
 def main():
-    calendar = GoogleCalendar('haztraintraining@gmail.com', credentials_path='./.credentials/credentials.json')
+    try:
+        calendar = GoogleCalendar('haztraintraining@gmail.com',
+                                  credentials_path='./.credentials/credentials.json')
+    except Exception as e:
+        print(f'An exception occurred: {e}')
+        return
+
 
     jan = datetime.datetime(2023, 1, 1, 0, 0, 0)
     dec = datetime.datetime(2023, 12, 31, 11, 59, 59)
@@ -44,5 +50,7 @@ def main():
     inst_df["Total"] = inst_df.loc[:, ["Virtual", "In Person", "Travel", "Holiday", "PTO", "Sick"]].sum(axis=1)
     inst_df["Perc"] = inst_df.loc[:, "Total"] / 2080 * 8
     print(inst_df)
+
+
 if __name__ == "__main__":
     main()
