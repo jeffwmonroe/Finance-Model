@@ -95,11 +95,14 @@ def bank():
 def process(last_check: str) -> None:
     """Process checks from Peach Tree for use with Positive Pay"""
     peachtree_df = read_peachtree()
+    print("Peachtree DF")
     print(peachtree_df)
     check_df = process_checks(peachtree_df)
     if last_check is not None:
         check_mask = check_df["Check #"] > last_check
         check_df = check_df[check_mask]
+        print('-'*30)
+        print("Check DF")
         print(check_df)
     write_issue_void(check_df)
 
@@ -123,6 +126,7 @@ def outstanding():
                     "pnc report 18 feb.xlsx",
                     "pnc report 21 feb.xlsx",
                     "pnc report 2 mar.xlsx",
+                    "pnc report 5 mar.xlsx",
                     ]
     # update_files = ["pnc report 5 feb.xlsx"]
     update_files = [f"{config['check_dir']}/{file}" for file in update_files]
