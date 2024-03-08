@@ -37,30 +37,29 @@ def process_pnc_initial(pnc_df: pd.DataFrame):
     return processed_df
 
 
-def process_pnc_update(pnc_df, update_df):
-    # print('-' * 30)
-    # print(f'process_pnc_update: ({id(pnc_df)} {len(pnc_df.index)}), ({id(update_df)} {len(update_df.index)})')
+def pnc_update_status(pnc_df, update_df, new_status):
+    update_df = update_df.drop_duplicates()
     return_value = pnc_df.copy()
-    # print('-' * 10)
-    # print(return_value)
-    paid_df = update_df.loc[update_df["Description"] == "Paid Check", ["Description", "Paid Date"]]
-    merged_df = return_value.join(paid_df, how='left', rsuffix='_pd')
-    # print(f'   merged_df: ({id(merged_df)}, {len(merged_df.index)})')
-    # print(merged_df)
-    mask = (~merged_df['Description_pd'].isna()) & (merged_df['Description'] == 'Issued Check')
-    # print(merged_df[mask & mask2])
-    return_value.loc[mask, "Paid Date"] = merged_df.loc[mask, "Paid Date_pd"]
-    return_value.loc[mask, "Description"] = "Paid Check"
+    update_df = update_df.loc[update_df["Description"] == new_status, ["Description", "Paid Date"]]
+    merged_df = return_value.join(update_df, how='left', rsuffix='_pd')
+    assert len(return_value.index) == len(merged_df.index)
+
+    update_mask = (~merged_df['Description_pd'].isna()) & (merged_df['Description'] == 'Issued Check')
+    # print(update_mask)
+    return_value.loc[update_mask, "Paid Date"] = merged_df.loc[update_mask, "Paid Date_pd"]
+    return_value.loc[update_mask, "Description"] = new_status
+
+    return return_value
+
+
+def process_pnc_update(pnc_df, update_df):
+    return_value = pnc_update_status(pnc_df, update_df, "Paid Check")
+    return_value = pnc_update_status(return_value, update_df, "Issued Check - VOID")
 
     issued_df = update_df.loc[update_df["Description"] == "Issued Check", :]
     merged_df = issued_df.join(return_value.loc[:, ["Description", "Payee Name 1"]], how='left', rsuffix='_pd')
-    merged_df = merged_df.loc[ merged_df['Description_pd'].isna(), "Description":"Payee Name 1"]
+    merged_df = merged_df.loc[merged_df['Description_pd'].isna(), "Description":"Payee Name 1"]
     return_value = pd.concat([return_value, merged_df]).sort_index()
-    # print(merged_df)
-    # return_value = pd.concat([return_value, issued_df])
-    # return_value = return_value[return_value.index.duplicated(keep='first')]
-    # print('return_value')
-    # print(return_value)
     return return_value
 
 
