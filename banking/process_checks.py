@@ -37,15 +37,15 @@ def process_pnc_initial(pnc_df: pd.DataFrame):
     return processed_df
 
 
-def pnc_update_status(pnc_df, update_df, new_status):
+def pnc_update_check_status(pnc_df, update_df, new_status):
     update_df = update_df.drop_duplicates()
     return_value = pnc_df.copy()
     update_df = update_df.loc[update_df["Description"] == new_status, ["Description", "Paid Date"]]
     merged_df = return_value.join(update_df, how='left', rsuffix='_pd')
+
     assert len(return_value.index) == len(merged_df.index)
 
     update_mask = (~merged_df['Description_pd'].isna()) & (merged_df['Description'] == 'Issued Check')
-    # print(update_mask)
     return_value.loc[update_mask, "Paid Date"] = merged_df.loc[update_mask, "Paid Date_pd"]
     return_value.loc[update_mask, "Description"] = new_status
 
@@ -53,8 +53,8 @@ def pnc_update_status(pnc_df, update_df, new_status):
 
 
 def process_pnc_update(pnc_df, update_df):
-    return_value = pnc_update_status(pnc_df, update_df, "Paid Check")
-    return_value = pnc_update_status(return_value, update_df, "Issued Check - VOID")
+    return_value = pnc_update_check_status(pnc_df, update_df, "Paid Check")
+    return_value = pnc_update_check_status(return_value, update_df, "Issued Check - VOID")
 
     issued_df = update_df.loc[update_df["Description"] == "Issued Check", :]
     merged_df = issued_df.join(return_value.loc[:, ["Description", "Payee Name 1"]], how='left', rsuffix='_pd')
