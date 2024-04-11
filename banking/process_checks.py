@@ -55,6 +55,7 @@ def pnc_update_check_status(pnc_df, update_df, new_status):
 def process_pnc_update(pnc_df, update_df):
     return_value = pnc_update_check_status(pnc_df, update_df, "Paid Check")
     return_value = pnc_update_check_status(return_value, update_df, "Issued Check - VOID")
+    return_value = pnc_update_check_status(return_value, update_df, "Stop Payment")
 
     issued_df = update_df.loc[update_df["Description"] == "Issued Check", :]
     merged_df = issued_df.join(return_value.loc[:, ["Description", "Payee Name 1"]], how='left', rsuffix='_pd')

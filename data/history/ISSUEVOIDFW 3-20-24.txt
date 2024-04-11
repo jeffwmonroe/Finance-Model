@@ -1,0 +1,31 @@
+55594648290000012811    3500.0003202024               Armfield Harrison & Thomas                                                                          I
+55594648290000012812    6845.3003202024               Advance Scale                                                                                       I
+55594648290000012813   17843.8403202024               American Express                                                                                    V
+55594648290000012814       0.0003202024               VOID                                                                                                V
+55594648290000012815       0.0003202024               VOID                                                                                                V
+55594648290000012816     660.1003202024               Aramark Uniform Services                                                                            I
+55594648290000012817      82.8603202024               Town Of Bedford                                                                                     I
+55594648290000012818    3900.0003202024               C. Nissley Env Consultants, Inc                                                                     I
+55594648290000012819   20484.0203202024               CareFirst BlueCross BlueShield                                                                      I
+55594648290000012820   16938.7303202024               Clean Harbors                                                                                       I
+55594648290000012821     535.9703202024               Comcast                                                                                             I
+55594648290000012822     160.0003202024               Heritage-Crystal Clean, LLC                                                                         I
+55594648290000012823    3089.9003202024               Timothy Czysz                                                                                       I
+55594648290000012824    2560.0003202024               Joseph Della-Volle                                                                                  I
+55594648290000012825     199.8103202024               Employment Screening Services, Inc                                                                  I
+55594648290000012826    1637.6503202024               Intergulf Corporation                                                                               I
+55594648290000012827    3769.7103202024               Linemark                                                                                            I
+55594648290000012828    1248.6803202024               HYG Financial Services Inc                                                                          I
+55594648290000012829     968.8503202024               MATHESON TRI-GAS INC.                                                                               I
+55594648290000012830    6904.0003202024               Neptune and Co., Inc.                                                                               I
+55594648290000012831     137.8003202024               Office Equipment Svcs                                                                               I
+55594648290000012832   23721.1703202024               Republic Services #855                                                                              I
+55594648290000012833    9477.2703202024               Safeware, Inc.                                                                                      I
+55594648290000012834      50.8803202024               Suburban Propane                                                                                    I
+55594648290000012835    4645.0003202024               Jordan E. Tannenbaum                                                                                I
+55594648290000012836   12762.6303202024               The Shipley Group                                                                                   I
+55594648290000012837     660.0003202024               John Thomas                                                                                         I
+55594648290000012838    1651.6303202024               WM Corporate Services, Inc                                                                          I
+55594648290000012839     264.0403202024               Aramark Uniform Services                                                                            I
+55594648290000012840     251.2103202024               Joshua A McCrea                                                                                     I
+55594648290000012841     751.4403202024               WM Corporate Services, Inc                                                                          I
