@@ -5,7 +5,7 @@ import pickle
 from config import config
 import click
 import pandas as pd
-from banking import Check
+from banking import Check, make_ach_payment
 from banking import read_peachtree, process_checks, write_issue_void, read_pnc, process_pnc_initial, process_pnc_update
 import datetime
 
@@ -101,7 +101,7 @@ def process(last_check: str) -> None:
     if last_check is not None:
         check_mask = check_df["Check #"] > last_check
         check_df = check_df[check_mask]
-        print('-'*30)
+        print('-' * 30)
         print("Check DF")
         print(check_df)
     write_issue_void(check_df)
@@ -153,8 +153,16 @@ def outstanding():
     pnc_df.to_excel(config['processed_check_output'])
 
     print(update_files)
+
+
+@click.command()
+def ach_payment():
+    make_ach_payment()
+
+
 bank.add_command(process)
 bank.add_command(outstanding)
+bank.add_command(ach_payment)
 
 
 def old_check_code() -> None:
