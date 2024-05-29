@@ -6,8 +6,8 @@ from banking.payment_detail import PaymentDetail
 HAZTRAIN_TAX_ID = "521309633"
 PNC_ROUTING_NUMBER = "054000030"
 PNC_TR_NUMBER = "071921891"
-COMPANY_NAME = "HazTrain Inc."
-
+COMPANY_NAME = "HazTrain Inc"
+COMPANY_ID = 1521309633
 
 class Natcha:
 
@@ -56,8 +56,8 @@ class Natcha:
             "094"  # Record Size
             "10"  # Blocking Factor
             "1"  # Format Code
-            f"{'PNC Bank':>23}"
-            f"{'HazTrain Inc.':>23}"
+            f"{'PNC Bank':<23}"
+            f"{'HazTrain Inc.':<23}"
             f"{' ':8}"
         )
         assert len(return_value) == 94, "Bad record length for header"
@@ -67,7 +67,7 @@ class Natcha:
         return_value = (
             "5"
             "220"  #Service Class code 220 == ACH Credits Only
-            f"{COMPANY_NAME:>16}"
+            f"{COMPANY_NAME:<16}"
             f"{'ACH Payments':>20}"
             f"1{HAZTRAIN_TAX_ID:}"
             "CCD"  # Standard entry class code
@@ -91,8 +91,8 @@ class Natcha:
             "220"               # Service class code
             f"{len(self.payments):06d}"
             f"{dfi_hash:010d}"
-            f"{0:012.2f}"
-            f"{total_amount:012.2f}"
+            f"{0:012d}"
+            f"{int(total_amount*100):012d}"
             f"1{HAZTRAIN_TAX_ID:}"
             f"{' ':19}"         # Message Authentication Code
             f"{' ':6}"          # Reserved
@@ -112,8 +112,8 @@ class Natcha:
             f"{2+2+2*len(self.payments):06d}"       # Block Count
             f"{2*len(self.payments):08d}"           # Entry Count
             f"{dfi_hash:010d}"                      # Entry Hash
-            f"{0:012.2f}"                            # Debit amount
-            f"{total_amount:012.2f}"                 # Credit amount
+            f"{0:012d}"                            # Debit amount
+            f"{int(total_amount*100):012d}"                 # Credit amount
             f"{' ':39}"
         )
         # print(f'file control length = {len(return_value)}')

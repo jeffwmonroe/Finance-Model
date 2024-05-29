@@ -9,6 +9,10 @@ def trim_string(str, max_len):
     return str
 
 
+def integer_amount(amount: float):
+    return int(amount * 100)
+
+
 class PaymentDetail:
     def __init__(self, payment_info, transaction_number):
         # print(f'Payment Info:')
@@ -44,7 +48,7 @@ class PaymentDetail:
         return f"{self.account_number:<17}"
 
     def trace_number(self):
-        return self.routing_number[:-1] + f"{self.transaction_number:07d}"
+        return ROUTING_NUMBER[:-1] + f"{self.transaction_number:07d}"
 
     def receiving_dfi(self):
         return self.routing_number[0:8]
@@ -56,7 +60,7 @@ class PaymentDetail:
             f"{self.receiving_dfi()}"  # Receiving DFI
             f"{self.routing_number[-1]}"
             f"{self.formatted_account_number()}"
-            f"{self.amount:010.2f}"
+            f"{int(self.amount*100):010d}"
             f"{self.vendor_id:>15}"
             f"{self.vendor_name:>22}"
             f"  "
