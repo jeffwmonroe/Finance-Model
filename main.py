@@ -163,10 +163,25 @@ def outstanding():
 def ach_payment():
     make_ach_payment()
 
+import os
+@click.command()
+def test():
+    print("Test")
+
+    with os.scandir(path=config['check_dir']) as dir_entries:
+        print(dir_entries)
+        files =  [file for file in dir_entries if file.is_file() and file.name[0:10] == 'pnc report']
+        files.sort(key=lambda x: x.stat().st_mtime)
+        print (files)
+        for entry in files:
+            info = entry.stat()
+            print(f'entry: {entry.name} {info.st_mtime}')
+
 
 bank.add_command(process)
 bank.add_command(outstanding)
 bank.add_command(ach_payment)
+bank.add_command(test)
 
 
 def old_check_code() -> None:
