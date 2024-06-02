@@ -136,6 +136,7 @@ def outstanding():
                     "pnc report 17 May.xlsx",
                     "pnc report 23 May.xlsx",
                     "pnc report 30 May.xlsx",
+                    "pnc report 2 June.xlsx",
                     ]
     # update_files = ["pnc report 5 feb.xlsx"]
     update_files = [f"{config['check_dir']}/{file}" for file in update_files]
@@ -160,8 +161,12 @@ def outstanding():
 
 
 @click.command()
-def ach_payment():
-    make_ach_payment()
+@click.option("-d", "--effective_date",
+              default=None,
+              help="THe effective date for the payment")
+def ach_payment(effective_date: str) -> None:
+    print(f'Effective Date: {effective_date}')
+    make_ach_payment(effective_date)
 
 import os
 @click.command()

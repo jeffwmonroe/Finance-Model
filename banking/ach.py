@@ -6,13 +6,17 @@ from banking.natcha import Natcha
 
 
 
-def make_ach_payment():
-    print("Make ACH Payment")
+def make_ach_payment(effective_date: str):
+    if effective_date is None:
+        effective_date = datetime.now()
+    else:
+        effective_date = datetime.strptime(effective_date, '%m/%d/%Y')
+    print(f"Make ACH Payment: {effective_date}")
 
     payment_file = f"{config['ach_dir']}/ACH_Payment.xlsx"
     natcha_file = f"{config['processed_dir']}/natcha_file.txt"
 
-    natcha = Natcha()
+    natcha = Natcha(effective_date)
     natcha.add_payments(payment_file)
 
     with open(natcha_file, "w") as f:

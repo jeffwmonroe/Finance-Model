@@ -22,8 +22,9 @@ class PaymentDetail:
         self.routing_number = payment_info["Routing Number"]
         self.account_number = payment_info["Account Number"]
         self.amount = payment_info["Amount"]
-        self.vendor_name = payment_info["Vendor Name"]
-        self.vendor_id = payment_info["Vendor ID"]
+        self.vendor_name = trim_string(payment_info["Vendor Name"], 22)
+
+        self.vendor_id = trim_string(payment_info["Vendor ID"],15)
         self.invoice_number = payment_info["Invoice Number"]
         self.description = payment_info["Description"]
         self.transaction_number = transaction_number
@@ -33,6 +34,8 @@ class PaymentDetail:
         assert len(self.routing_number) == 9
         assert len(self.account_number) <= 17
         assert len(self.description) <= 80
+        assert len(self.vendor_id) <= 15
+        assert len(self.vendor_name) <= 22
 
     def transaction_code(self):
         if self.account_type == "checking":
@@ -45,22 +48,28 @@ class PaymentDetail:
         assert len(self.account_number) < 17
         # Account number cannot contain spaces
         assert self.account_number.find(" ") == -1, "Error spaces in account number"
-        return f"{self.account_number:<17}"
+        return_value = f"{self.account_number:<17}"
+        assert len(return_value) == 17, "Error formatted account number wrong length"
+        return return_value
 
     def trace_number(self):
-        return ROUTING_NUMBER[:-1] + f"{self.transaction_number:07d}"
+        return_value = ROUTING_NUMBER[:-1] + f"{self.transaction_number:07d}"
+        # print(f'trace number: ({len(return_value)}): {return_value}')
+        return return_value
 
     def receiving_dfi(self):
+        assert len(self.routing_number) == 9
         return self.routing_number[0:8]
 
     def entry_detail_record(self):
+        # print(f'amount = {self.amount} : {int(round(self.amount * 100,0))}')
         return_value = (
             f"6"
             f"{self.transaction_code()}"
             f"{self.receiving_dfi()}"  # Receiving DFI
             f"{self.routing_number[-1]}"
             f"{self.formatted_account_number()}"
-            f"{int(self.amount*100):010d}"
+            f"{int(round(self.amount * 100,0)):010d}"
             f"{self.vendor_id:>15}"
             f"{self.vendor_name:>22}"
             f"  "
@@ -68,7 +77,8 @@ class PaymentDetail:
             f"{self.trace_number()}"
         )
         # print(f"entry len = {len(ret)}")
-        assert len(return_value) == 94, "Record is the wrong length"
+        # print(return_value)
+        assert len(return_value) == 94, f"Record is the wrong length: {len(return_value)}\n{return_value}"
         return return_value
 
     def formatted_invoice_number(self):

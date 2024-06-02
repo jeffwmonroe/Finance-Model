@@ -11,7 +11,8 @@ COMPANY_ID = 1521309633
 
 class Natcha:
 
-    def __init__(self):
+    def __init__(self, effective_date: datetime):
+        self.effective_date = effective_date
         self.receiver_df = pd.read_excel(config['ack_receivers'], dtype={'Routing Number': str,
                                                                          'Account Number': str,
                                                                          'Customer ID': str,
@@ -25,14 +26,19 @@ class Natcha:
 
     def add_payments(self, payment_file):
         # print("Add_payments")
-        payment_df = pd.read_excel(payment_file)
+        payment_df = pd.read_excel(payment_file, dtype={
+            'Description': str,
+            'Amount': float,
+            # 'Invoice Date': datetime,
+        })
+        payment_df['Description'] = payment_df['Description'].fillna('')
         # print(payment_df)
         # print(payment_df.dtypes)
 
-        # print("joined DF:")
         joined_df = payment_df.merge(self.receiver_df, left_on="Vendor ID", right_on="Vendor ID", how="left")
-        # print(joined_df.head())
-        # print(joined_df.dtypes)
+        print("joined DF:")
+        print(joined_df)
+        print(joined_df.dtypes)
         # print("Vendors:")
         assert joined_df.loc[:, "Vendor Name"].isnull().sum() == 0, "One of the payees not found in receivers"
 
@@ -66,14 +72,14 @@ class Natcha:
     def company_batch_header(self, batch_number=1):
         return_value = (
             "5"
-            "220"  #Service Class code 220 == ACH Credits Only
+            "220"                           # Service Class code 220 == ACH Credits Only
             f"{COMPANY_NAME:<16}"
-            f"{'ACH Payments':>20}"
+            f"{'ACH Payments':>20}"         # Discretionary data ToDo Look to change this
             f"1{HAZTRAIN_TAX_ID:}"
-            "CCD"  # Standard entry class code
-            f"{'Payments':10}"
-            f"{self.creation_date.year - 2000:02d}{self.creation_date.month:02d}{self.creation_date.day:02d}"
-            f"{self.creation_date.year - 2000:02d}{self.creation_date.month:02d}{self.creation_date.day:02d}"
+            "CCD"                           # Standard entry class code
+            f"{'Payments':10}"              # Company entry description  ToDo Look to change this
+            f"{self.effective_date.year - 2000:02d}{self.effective_date.month:02d}{self.effective_date.day:02d}"
+            f"{self.effective_date.year - 2000:02d}{self.effective_date.month:02d}{self.effective_date.day:02d}"
             f"{' ':3}"  # Settlement Date
             "1"  # Originator Status Code
             f"{PNC_ROUTING_NUMBER[0:8]}"
