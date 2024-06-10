@@ -1,6 +1,23 @@
+from datetime import datetime
 import pandas as pd
-import numpy as np
+import os
 from config import config
+
+
+def collect_check_updates():
+    updates = []
+    with os.scandir(path=config['check_dir']) as dir_entries:
+        files = [file for file in dir_entries if file.is_file() and file.name[0:10] == 'pnc report']
+        for entry in files:
+            update_df, date = read_pnc(f"{config["check_dir"]}/{entry.name}")
+            updates.append({'df': update_df,
+                            'date': date,
+                            }
+                           )
+            info = entry.stat()
+            # print(f'entry: {entry.name} {info.st_mtime}')
+    updates.sort(key=lambda x: x['date'], reverse=False)
+    return updates
 
 
 def read_peachtree() -> pd.DataFrame:
@@ -65,7 +82,15 @@ def process_pnc_update(pnc_df, update_df):
 
 
 def read_pnc(pnc_file) -> pd.DataFrame:
+    # print(f'inside of read_pnc: {pnc_file}')
     pnc_df = pd.read_excel(pnc_file)
+    # print(pnc_df)
+    date = pnc_df.iloc[0, -1]
+    # print(f'date: [{date}]')
+    # print(type(date))
+    # date = datetime.strptime(date, "%b %d")
+    date = datetime.strptime(date, "%b %d, %Y %H:%M:%S %p")
+    # print(f'date = {date}')
     col = pnc_df.iloc[1, :]
     pnc_df.columns = col
     pnc_df = pnc_df.iloc[2:, :]
@@ -79,7 +104,7 @@ def read_pnc(pnc_file) -> pd.DataFrame:
     pnc_df["Paid Date"] = pd.to_datetime(pnc_df["Paid Date"])
     pnc_df["Stop Effective Date"] = pd.to_datetime(pnc_df["Stop Effective Date"])
     pnc_df["Stop Expiry Date"] = pd.to_datetime(pnc_df["Stop Expiry Date"])
-    return pnc_df
+    return pnc_df, date
 
 
 def dummy():
@@ -156,3 +181,28 @@ def write_issue_void(check_df: pd.DataFrame) -> None:
                 action = "I"
             check_str = f'{account_number}{check["Check #"]:0>10}{check["Amount"]:11.2f}{check["Date"].month:02d}{check["Date"].day:02d}{check["Date"].year}{" ":<15}{check["Payee"]:<50}{" ":<50}{action}'
             f.write(check_str + '\n')
+
+
+def calculate_outstanding_checks():
+    pnc_file = config['pnc_checks']
+    pnc_df, date = read_pnc(pnc_file)
+    pnc_df = process_pnc_initial(pnc_df)
+
+    updates = collect_check_updates()
+
+    for update in updates:
+        update_df = update['df']
+        pnc_df = process_pnc_update(pnc_df, update_df)
+    print('-' * 70)
+    print('final result')
+    mask = (pnc_df["Description"] == "Issued Check")
+
+    print(pnc_df.loc[pnc_df["Description"] == "Issued Check", ['Description',
+                                                               'Amount',
+                                                               'Issue Date',
+                                                               'Paid Date',
+                                                               'Payee Name 1']])
+    print(f'Outstanding Amount = ${pnc_df.loc[pnc_df["Description"] == "Issued Check", "Amount"].sum():,.2f}')
+    pnc_df.to_excel(config['processed_check_output'])
+
+    # print(update_files)
