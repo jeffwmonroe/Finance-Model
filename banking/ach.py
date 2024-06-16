@@ -22,6 +22,7 @@ def make_ach_payment(effective_date: str):
     with open(natcha_file, "w") as f:
         natcha.write_to_file(f)
 
+    print(f'Total amount of ACH Payment: ${natcha.total_amount():,.2f}')
     # pay = payment("123456789", "my account", 3.14, "my id", "Jeffrey Wayne Monroe")
     # print(pay.entry_detail(7))
 

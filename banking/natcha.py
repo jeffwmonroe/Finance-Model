@@ -38,9 +38,15 @@ class Natcha:
         joined_df = payment_df.merge(self.receiver_df, left_on="Vendor ID", right_on="Vendor ID", how="left")
         print("joined DF:")
         print(joined_df)
-        print(joined_df.dtypes)
+        # print(joined_df.dtypes)
         # print("Vendors:")
-        assert joined_df.loc[:, "Vendor Name"].isnull().sum() == 0, "One of the payees not found in receivers"
+        # if joined_df.loc[:, "Vendor Name"].isnull().sum() > 0:
+        #     print("Vendor not found")
+        assert joined_df.loc[:, "Vendor Name"].isnull().sum() == 0, "A vendor not found in receivers"
+        assert joined_df.loc[:, "Vendor Type"].isnull().sum() == 0, "A vendor does not have a vendor type"
+        assert joined_df.loc[:, "Account Type"].isnull().sum() == 0, "A vendor does not have an account type"
+        assert joined_df.loc[:, "Routing Number"].isnull().sum() == 0, "A vendor does not have a routing number"
+        assert joined_df.loc[:, "Account Number"].isnull().sum() == 0, "A vendor does not have an account number"
 
         for i in range(len(joined_df.index)):
             # print(f'i={i} {joined_df.loc[i, "Vendor Name"]}')
@@ -135,3 +141,7 @@ class Natcha:
             file.write(payment.addenda_record() + "\n")
         file.write(self.batch_control_record() + "\n")
         file.write(self.file_control_record() + "\n")
+
+    def total_amount(self):
+        amount = sum([payment.amount for payment in self.payments])
+        return amount
