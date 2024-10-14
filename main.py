@@ -134,6 +134,21 @@ bank.add_command(outstanding)
 bank.add_command(ach_payment)
 bank.add_command(test)
 
+
+@wacky.group()
+def netsuite():
+    """finance group of commands"""
+    print('inside of cli')
+
+
+@click.command()
+def ns():
+    print("Hello Netsuite")
+
+
+netsuite.add_command(ns)
+
+
 def main():
     """Main function"""
     # finance()
